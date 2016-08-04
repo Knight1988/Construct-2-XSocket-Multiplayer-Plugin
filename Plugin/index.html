@@ -3,13 +3,46 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>TypeScript HTML App</title>
-    <link rel="stylesheet" href="app.css" type="text/css" />
-    <script src="app.js"></script>
+    <title>Test</title>
+    <script src="multiplayer_xsocket/xsockets.latest.min.js"></script>
+    <script src="multiplayer_xsocket/xsocket-wrapper.js"></script>
 </head>
 <body>
-    <h1>TypeScript HTML App</h1>
+    <script>
+        // ReSharper disable InconsistentNaming
+        var client = new XSocketWrapper();
 
-    <div id="content"></div>
+        client.onConnected = function (player) {
+            console.log("Connected", player);
+            client.autoJoinRoom("net.lingcor.PaddleBall", "game", 2);
+        };
+        client.onRoomJoined = function () {
+            console.log("Room joined", client.room);
+        };
+        client.onPlayerJoinedRoom = function (player) {
+            console.log("Player joined", player);
+            client.sendMessage(player.id, "Test", "Message from player 1");
+            client.broadcastPosition("Test", 50, 50);
+            client.broadcastAngle("Test", 90);
+            client.broadcastPositionAndAngle("Test", 50, 50, 90);
+        };
+        client.onPlayerLeaveRoom = function (player) {
+            console.log("Player leaved", player);
+        };
+        client.onPlayerMessage = function (message) {
+            console.log("Player Message", message);
+        };
+        client.onPlayerPosition = function (position) {
+            console.log("Position", position);
+        };
+        client.onPlayerAngle = function (angle) {
+            console.log("Angle", angle);
+        };
+        client.onPlayerPositionAndAngle = function (positionAndAngle) {
+            console.log("PositionAndAngle", positionAndAngle);
+        };
+        client.connect('ws://localhost:4502', "Test1");
+        // ReSharper restore InconsistentNaming
+    </script>
 </body>
 </html>

@@ -22,14 +22,22 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="app.css" />
     <Content Include="index.html" />
+    <Content Include="multiplayer_xsocket\common.js" />
+    <Content Include="multiplayer_xsocket\edittime.js" />
+    <Content Include="multiplayer_xsocket\PluginIcon.ico" />
+    <Content Include="multiplayer_xsocket\runtime.js" />
+    <Content Include="scripts\XSockets\xsockets.latest.js" />
+    <Content Include="multiplayer_xsocket\xsockets.latest.min.js" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="app.ts" />
+    <TypeScriptCompile Include="multiplayer_xsocket\entities.ts" />
+    <TypeScriptCompile Include="multiplayer_xsocket\xsocket-wrapper.ts" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="scripts\XSockets\xsockets.latest.js.map" />
+    <Content Include="packages.config" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
