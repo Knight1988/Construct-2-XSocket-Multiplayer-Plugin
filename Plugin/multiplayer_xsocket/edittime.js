@@ -10,7 +10,7 @@
 		"category":		"Web",						// Prefer to re-use existing categories, but you can set anything here
 		"type":			"object",					// either "world" (appears in layout and is drawn), else "object"
 		"rotatable":	true,						// only used when "type" is "world".  Enables an angle property on the object.
-		"dependency": "xsocket-wrapper.js,xsockets.latest.min.js",
+		"dependency": "xsockets.latest.min.js;xsocket-wrapper.js",
 		"flags":		0							// uncomment lines to enable flags...
 						| pf_singleglobal			// exists project-wide, e.g. mouse, keyboard.  "type" must be "object".
 					//	| pf_texture				// object has a single texture (e.g. tiled background)
@@ -54,9 +54,12 @@
 //				display_str,		// as appears in event sheet - use {0}, {1} for parameters and also <b></b>, <i></i>
 //				description,		// appears in event wizard dialog when selected
 //				script_name);		// corresponding runtime function name
-AddCondition(0, cf_trigger, "On XSocket loaded", "Loader", "On XSocket loaded", "Triggered when xsocket javascript is loaded.", "onLoaded");
 
+// Connected
 AddCondition(1, cf_trigger, "On connected", "Signalling", "On signalling connected", "Triggered when successfully connected to the signalling server.", "onConnected");
+
+// Room joined
+AddCondition(2, cf_trigger, "On joined room", "Signalling", "On signalling joined room", "Triggered upon successfully joining a room.", "onRoomJoined");
 
 ////////////////////////////////////////
 // Actions
@@ -69,13 +72,16 @@ AddCondition(1, cf_trigger, "On connected", "Signalling", "On signalling connect
 //			 description,		// appears in event wizard dialog when selected
 //			 script_name);		// corresponding runtime function name
 
-// Load xsocket script
-AddStringParam("Url", "Load xsocket javascript.");
-AddAction(0, af_none, "Load script", "Load", "Load {0}", "Load xsocket script api", "loadScript");
 // Connect to server
 AddStringParam("Server", "The signalling server URL to connect to.", "\"ws://localhost:4502\"");
 AddStringParam("Name", "The desired name to use on the server.");
 AddAction(1, af_none, "Connect", "Signalling", "Connect to signalling server <b>{0}</b>", "Connect to a signalling server to be able to join rooms.", "connect");
+
+// Join room
+AddStringParam("Game", "A string uniquely identifying this game on the server. To help ensure uniqueness, include your reverse domain, e.g. \"net.example.MyGame\".", "\"net.example.MyGame\"");
+AddStringParam("Room", "The name of the room to request joining.");
+AddNumberParam("Max players", "The maximum number of players that can join this room. Only the host's value is used. Leave 0 for unlimited.");
+AddAction(2, af_none, "Join room", "Signalling", "Join room <b>{1}</b> for game <i>{0}</i> (max peers: <i>{2}</i>)", "Once logged in, join a room to meet other players.", "joinRoom");
 
 ////////////////////////////////////////
 // Expressions

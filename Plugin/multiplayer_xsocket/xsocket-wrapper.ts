@@ -11,19 +11,6 @@ class XSocketWrapper {
         return xsockets != undefined;
     }
 
-    loadJavaScript(url: string) {
-        var self = this;
-        (((d, s, id) => {
-            var fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) return;
-            var js = d.createElement(s);
-            js.id = id;
-            fjs.parentNode.insertBefore(js, fjs);
-            js.onload = self.onScriptLoaded;
-            js.src = url;
-        })(document, "script", "xsockets-sdk"));
-    }
-
     connect(url: string, name: string) {
         var self = this;
         var conn = new xsockets.client(url);
@@ -69,28 +56,19 @@ class XSocketWrapper {
         conn.open();
     }
 
-    createRoom(gameName: string, roomName: string, maxPlayer: number, password: string) {
+    joinRoom(gameName: string, roomName: string, maxPlayers: number, password: string = "") {
         var self = this;
-        this._controller.invoke("createandjoinroom",
-            { gameName: gameName, roomName: roomName, maxPlayer: maxPlayer, password: password })
+        this._controller.invoke("joinorcreateroom",
+            { gameName: gameName, roomName: roomName, maxPlayers: maxPlayers, password: password })
             .then(data => {
                 self.room = data.room;
                 self.onRoomJoined();
             });
     }
 
-    joinRoom(roomId: number, password: string) {
+    autoJoinRoom(gameName: string, roomName: string, maxPlayers: number) {
         var self = this;
-        this._controller.invoke("joinroom", { roomId: roomId, password: password })
-            .then((data) => {
-                self.room = data.room;
-                self.onRoomJoined();
-            });
-    }
-
-    autoJoinRoom(gameName: string, roomName: string, maxPlayer: number) {
-        var self = this;
-        this._controller.invoke("autojoinroom", { gameName: gameName, roomName: roomName, maxPlayer: maxPlayer })
+        this._controller.invoke("autojoinroom", { gameName: gameName, roomName: roomName, maxPlayers: maxPlayers })
             .then((data) => {
                 self.room = data.room;
                 self.onRoomJoined();
@@ -120,8 +98,6 @@ class XSocketWrapper {
     onConnected(player: Player) { }
 
     onRoomJoined() { }
-
-    onScriptLoaded() { }
 
     onPlayerJoinedRoom(player: Player) { }
 

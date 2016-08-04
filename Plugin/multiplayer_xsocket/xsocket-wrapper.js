@@ -10,19 +10,6 @@ var XSocketWrapper = (function () {
         enumerable: true,
         configurable: true
     });
-    XSocketWrapper.prototype.loadJavaScript = function (url) {
-        var self = this;
-        ((function (d, s, id) {
-            var fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id))
-                return;
-            var js = d.createElement(s);
-            js.id = id;
-            fjs.parentNode.insertBefore(js, fjs);
-            js.onload = self.onScriptLoaded;
-            js.src = url;
-        })(document, "script", "xsockets-sdk"));
-    };
     XSocketWrapper.prototype.connect = function (url, name) {
         var self = this;
         var conn = new xsockets.client(url);
@@ -60,25 +47,18 @@ var XSocketWrapper = (function () {
         };
         conn.open();
     };
-    XSocketWrapper.prototype.createRoom = function (gameName, roomName, maxPlayer, password) {
+    XSocketWrapper.prototype.joinRoom = function (gameName, roomName, maxPlayers, password) {
+        if (password === void 0) { password = ""; }
         var self = this;
-        this._controller.invoke("createandjoinroom", { gameName: gameName, roomName: roomName, maxPlayer: maxPlayer, password: password })
+        this._controller.invoke("joinorcreateroom", { gameName: gameName, roomName: roomName, maxPlayers: maxPlayers, password: password })
             .then(function (data) {
             self.room = data.room;
             self.onRoomJoined();
         });
     };
-    XSocketWrapper.prototype.joinRoom = function (roomId, password) {
+    XSocketWrapper.prototype.autoJoinRoom = function (gameName, roomName, maxPlayers) {
         var self = this;
-        this._controller.invoke("joinroom", { roomId: roomId, password: password })
-            .then(function (data) {
-            self.room = data.room;
-            self.onRoomJoined();
-        });
-    };
-    XSocketWrapper.prototype.autoJoinRoom = function (gameName, roomName, maxPlayer) {
-        var self = this;
-        this._controller.invoke("autojoinroom", { gameName: gameName, roomName: roomName, maxPlayer: maxPlayer })
+        this._controller.invoke("autojoinroom", { gameName: gameName, roomName: roomName, maxPlayers: maxPlayers })
             .then(function (data) {
             self.room = data.room;
             self.onRoomJoined();
@@ -101,7 +81,6 @@ var XSocketWrapper = (function () {
     };
     XSocketWrapper.prototype.onConnected = function (player) { };
     XSocketWrapper.prototype.onRoomJoined = function () { };
-    XSocketWrapper.prototype.onScriptLoaded = function () { };
     XSocketWrapper.prototype.onPlayerJoinedRoom = function (player) { };
     XSocketWrapper.prototype.onPlayerLeaveRoom = function (player) { };
     XSocketWrapper.prototype.onPlayerMessage = function (message) { };

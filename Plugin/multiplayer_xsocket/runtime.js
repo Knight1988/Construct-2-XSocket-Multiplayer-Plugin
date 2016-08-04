@@ -56,10 +56,6 @@ cr.plugins_.xsockets_multiplayer = function(runtime)
 		// this.myValue = 0;
 		var self = this;
 		var client = self.client = new XSocketWrapper();
-		
-		client.onScriptLoaded = function () {
-			self.runtime.trigger(cr.plugins_.xsockets_multiplayer.prototype.cnds.onLoaded, self);
-		};
 
 		client.onConnected = function (player) {
 			self.runtime.trigger(cr.plugins_.xsockets_multiplayer.prototype.cnds.onConnected, self);
@@ -146,12 +142,6 @@ cr.plugins_.xsockets_multiplayer = function(runtime)
 	// Conditions
 	function Cnds() {};
 
-	// XSocket javascript loaded event
-	Cnds.prototype.onLoaded = function ()
-	{
-		return true;
-	};
-
 	// XSocket connected event
 	Cnds.prototype.onConnected = function ()
 	{
@@ -163,17 +153,17 @@ cr.plugins_.xsockets_multiplayer = function(runtime)
 	//////////////////////////////////////
 	// Actions
 	function Acts() {};
-
-	// load xsocket script
-	Acts.prototype.loadScript = function (url)
-	{
-		this.client.loadJavaScript(url);
-	};
 	
 	// connect to server
 	Acts.prototype.connect = function (url, name)
 	{
 		this.client.connect(url, name);
+	};
+	
+	// join room
+	Acts.prototype.joinRoom = function (gameName, roomName, maxPlayers, password)
+	{
+	    this.client.joinRoom(gameName, roomName, maxPlayers, password);
 	};
 	
 	pluginProto.acts = new Acts();

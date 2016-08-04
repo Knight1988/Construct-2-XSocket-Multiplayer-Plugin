@@ -34,16 +34,9 @@ namespace GameServer.Controllers
         /// <summary>
         /// Join room
         /// </summary>
-        /// <param name="gameName">Game name</param>
-        /// <param name="roomName">Room name</param>
-        /// <param name="password">Room's password</param>
         /// <returns></returns>
-        public async Task<JoinRoomResult> JoinRoom(string gameName, string roomName, string password)
+        private async Task<JoinRoomResult> JoinRoom(Room room, string password)
         {
-            var room = Rooms.FirstOrDefault(p => p.Name == roomName && p.GameName == gameName);
-
-            if (room == null) return new JoinRoomResult("Room not exist");
-
             if (room.Password != password) return new JoinRoomResult("Wrong password");
 
             if (room.MaxPlayer == room.Players.Count) return new JoinRoomResult("Room is full");
@@ -60,19 +53,41 @@ namespace GameServer.Controllers
         }
 
         /// <summary>
-        /// Join a room, auto create room
+        /// Join a room, auto generate room name
         /// </summary>
         /// <param name="gameName">Game name</param>
         /// <param name="roomName">Room name</param>
-        /// <param name="maxPlayer">Max players</param>
+        /// <param name="maxPlayers">Max players</param>
         /// <returns>Room info if success or message if failed</returns>
-        public async Task<JoinRoomResult> AutoJoinRoom(string gameName, string roomName, int maxPlayer)
+        public async Task<JoinRoomResult> AutoJoinRoom(string gameName, string roomName, int maxPlayers)
         {
+            // find room with no password
             var room = Rooms.FirstOrDefault(p => p.Name == roomName && p.GameName == gameName && p.Password == string.Empty && !p.IsFull);
 
-            if (room == null || room.IsFull) return await CreateAndJoinRoom(gameName, GetUniqueRoomName(gameName, roomName), maxPlayer, string.Empty);
+            // create new room if room not found or full
+            if (room == null || room.IsFull) room = CreateRoom(gameName, GetUniqueRoomName(gameName, roomName), maxPlayers, string.Empty);
 
-            return await JoinRoom(room.GameName, room.Name, string.Empty);
+            // join the room
+            return await JoinRoom(room, string.Empty);
+        }
+
+        /// <summary>
+        /// Join a room, auto create room
+        /// </summary>
+        /// <param name="gameName"></param>
+        /// <param name="roomName"></param>
+        /// <param name="maxPlayers"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public async Task<JoinRoomResult> JoinOrCreateRoom(string gameName, string roomName, int maxPlayers, string password)
+        {
+            // find the room
+            var room = Rooms.FirstOrDefault(p => p.Name == roomName && p.GameName == gameName)
+                        // create room if not exist
+                       ?? CreateRoom(gameName, roomName, maxPlayers, password);
+
+            // Join the room
+            return await JoinRoom(room, string.Empty);
         }
 
         /// <summary>
@@ -83,11 +98,10 @@ namespace GameServer.Controllers
         /// <param name="maxPlayer">Max players</param>
         /// <param name="password">Room's password</param>
         /// <returns>Room info if success or message if failed</returns>
-        public async Task<JoinRoomResult> CreateAndJoinRoom(string gameName, string roomName, int maxPlayer,
+        private Room CreateRoom(string gameName, string roomName, int maxPlayer,
             string password)
         {
-            if (Rooms.Any(p => p.Name == roomName && p.GameName == gameName)) return new JoinRoomResult("Room is exist");
-
+            // Create room
             var room = new Room
             {
                 GameName = gameName,
@@ -96,9 +110,10 @@ namespace GameServer.Controllers
                 Password = password
             };
 
+            // Add to list
             Rooms.Add(room);
 
-            return await JoinRoom(room.GameName, room.Name, password);
+            return room;
         }
 
         /// <summary>
