@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace GameServer.Model
+namespace ServerController.Model
 {
     [JsonObject(MemberSerialization.OptIn)]
     public class JoinRoomResult

@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A99A212A-5CCA-4DB9-B159-310894326CD8}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{650BA651-4780-45CD-9C96-B6BB125347F4}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GameServer</RootNamespace>
-    <AssemblyName>Server</AssemblyName>
+    <RootNamespace>ServerController</RootNamespace>
+    <AssemblyName>ServerController</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -36,14 +34,6 @@
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Serilog, Version=1.5.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
-      <HintPath>..\packages\Serilog.1.5.14\lib\net45\Serilog.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Serilog.FullNetFx, Version=1.5.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
-      <HintPath>..\packages\Serilog.1.5.14\lib\net45\Serilog.FullNetFx.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -52,10 +42,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="XSockets.Controllers, Version=5.3.3.0, Culture=neutral, PublicKeyToken=b6fe5d03d264a088, processorArchitecture=MSIL">
-      <HintPath>..\packages\XSockets.Server.5.3.3.1\lib\net45\XSockets.Controllers.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="XSockets.Core, Version=5.3.3.0, Culture=neutral, PublicKeyToken=b6fe5d03d264a088, processorArchitecture=MSIL">
       <HintPath>..\packages\XSockets.Core.5.3.3.1\lib\net45\XSockets.Core.dll</HintPath>
       <Private>True</Private>
@@ -64,16 +50,8 @@
       <HintPath>..\packages\XSockets.Core.5.3.3.1\lib\net45\XSockets.Core.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="XSockets.Core.Communication, Version=5.3.3.0, Culture=neutral, PublicKeyToken=b6fe5d03d264a088, processorArchitecture=MSIL">
-      <HintPath>..\packages\XSockets.Server.5.3.3.1\lib\net45\XSockets.Core.Communication.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="XSockets.Enterprise, Version=5.3.3.0, Culture=neutral, PublicKeyToken=b6fe5d03d264a088, processorArchitecture=MSIL">
-      <HintPath>..\packages\XSockets.Server.5.3.3.1\lib\net45\XSockets.Enterprise.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="XSockets.Logger, Version=5.3.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\XSockets.Server.5.3.3.1\lib\net45\XSockets.Logger.dll</HintPath>
+      <HintPath>..\packages\XSockets.Core.5.3.3.1\lib\net45\XSockets.Enterprise.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="XSockets.Plugin.Framework, Version=5.3.3.0, Culture=neutral, PublicKeyToken=b6fe5d03d264a088, processorArchitecture=MSIL">
@@ -108,32 +86,18 @@
       <HintPath>..\packages\XSockets.Core.5.3.3.1\lib\net45\XSockets.Serialization.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="XSockets.Server, Version=5.3.3.0, Culture=neutral, PublicKeyToken=b6fe5d03d264a088, processorArchitecture=MSIL">
-      <HintPath>..\packages\XSockets.Server.5.3.3.1\lib\net45\XSockets.Server.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="GameController.cs" />
+    <Compile Include="Model\JoinRoomResult.cs" />
+    <Compile Include="Model\PeerMessage.cs" />
+    <Compile Include="Model\Player.cs" />
+    <Compile Include="Model\Position.cs" />
+    <Compile Include="Model\Room.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="XSocketsNET\DefaultLogger.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="xsockets.license.x">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="XSocketsNET\dummy.txt" />
-    <Content Include="XSocketsNET\ServerExample\ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ServerController\ServerController.csproj">
-      <Project>{650ba651-4780-45cd-9c96-b6bb125347f4}</Project>
-      <Name>ServerController</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

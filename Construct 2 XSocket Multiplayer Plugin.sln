@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin", "Plugin\Plugin.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{A99A212A-5CCA-4DB9-B159-310894326CD8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerController", "ServerController\ServerController.csproj", "{650BA651-4780-45CD-9C96-B6BB125347F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LingCorServer", "LingCorServer\LingCorServer.csproj", "{7D6D61CF-84C4-4653-9A99-E720AA001B41}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{A99A212A-5CCA-4DB9-B159-310894326CD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A99A212A-5CCA-4DB9-B159-310894326CD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A99A212A-5CCA-4DB9-B159-310894326CD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{650BA651-4780-45CD-9C96-B6BB125347F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{650BA651-4780-45CD-9C96-B6BB125347F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{650BA651-4780-45CD-9C96-B6BB125347F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{650BA651-4780-45CD-9C96-B6BB125347F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D6D61CF-84C4-4653-9A99-E720AA001B41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D6D61CF-84C4-4653-9A99-E720AA001B41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D6D61CF-84C4-4653-9A99-E720AA001B41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D6D61CF-84C4-4653-9A99-E720AA001B41}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

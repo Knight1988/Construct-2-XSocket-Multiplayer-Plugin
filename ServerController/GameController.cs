@@ -3,11 +3,11 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using GameServer.Model;
+using ServerController.Model;
 using XSockets.Core.XSocket;
 using XSockets.Core.XSocket.Helpers;
 
-namespace GameServer.Controllers
+namespace ServerController
 {
     /// <summary>
     ///     Implement/Override your custom actionmethods, events etc in this real-time MVC controller
