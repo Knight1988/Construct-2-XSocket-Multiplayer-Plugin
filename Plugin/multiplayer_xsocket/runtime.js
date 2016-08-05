@@ -177,7 +177,7 @@ cr.plugins_.xsockets_multiplayer = function(runtime)
 
     // check if player is host
 	Cnds.prototype.IsHost = function () {
-	    return this.client.room.
+	    return this.client.room.hostId == this.client.me.id;
 	};
 	
 	pluginProto.cnds = new Cnds();

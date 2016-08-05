@@ -5,11 +5,10 @@ namespace GameServer.Model
     [JsonObject(MemberSerialization.OptIn)]
     public class Player 
     {
-        public Player(long id, string name, bool isHost)
+        public Player(long id, string name)
         {
             Id = id;
             Name = name;
-            IsHost = isHost;
         }
 
         /// <summary>
@@ -22,11 +21,5 @@ namespace GameServer.Model
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
-
-        /// <summary>
-        /// name
-        /// </summary>
-        [JsonProperty("isHost")]
-        public bool IsHost { get; set; }
     }
 }

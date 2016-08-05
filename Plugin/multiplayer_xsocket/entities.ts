@@ -29,7 +29,6 @@ class Room {
 class Player {
     id: number;
     name: string;
-    isHost: boolean;
 }
 
 class Message {

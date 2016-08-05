@@ -68,7 +68,7 @@ AddCondition(3, cf_trigger, "On left room", "Signalling", "On signalling left ro
 AddCondition(4, cf_trigger, "On player joined room", "Room", "On player joined room", "Triggered when a player joined room.", "OnPlayerJoinedRoom");
 
 // Check if is host
-AddCondition(6, cf_none, "Is host", "Room", "Is host", "True if host of the current room.", "IsHost");
+AddCondition(5, cf_none, "Is host", "Room", "Is host", "True if host of the current room.", "IsHost");
 
 ////////////////////////////////////////
 // Actions

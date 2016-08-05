@@ -46,7 +46,7 @@ namespace GameServer.Controllers
 
             if (room.MaxPlayer == room.Players.Count) return new JoinRoomResult("Room is full");
 
-            var player = new Player(_me.Id, _me.Name, room.Players.Count == 0);
+            var player = new Player(_me.Id, _me.Name);
             // add player to room
             room.Players.Add(player);
             // set current room
@@ -63,9 +63,8 @@ namespace GameServer.Controllers
         {
             if (_joinedRoom == null) return;
             
-            if (_joinedRoom.Players.Count == 0 || _me.IsHost)
+            if (_joinedRoom.Players.Count == 1 || _joinedRoom.HostId == _me.Id)
             {
-                _joinedRoom.Players.ForEach(p => p.IsHost = p.Id == playerId);
                 _joinedRoom.HostId = playerId;
                 await this.InvokeTo(p => p._me.Id == playerId, "promoteHost");
             }
@@ -207,7 +206,7 @@ namespace GameServer.Controllers
 
         public override async Task OnOpened()
         {
-            _me = new Player(_idCounter++, this.GetParameter("name"), false);
+            _me = new Player(_idCounter++, this.GetParameter("name"));
             await this.Invoke(new
             {
                 me = _me,
