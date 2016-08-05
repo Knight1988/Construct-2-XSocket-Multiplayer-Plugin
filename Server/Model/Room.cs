@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GameServer.Controllers;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace GameServer.Model
@@ -13,13 +8,21 @@ namespace GameServer.Model
     {
         [JsonProperty("gameName")]
         public string GameName { get; set; }
-        [JsonProperty("roomName")]
+
+        [JsonProperty("name")]
         public string Name { get; set; }
+
         [JsonProperty("maxPlayer")]
         public int MaxPlayer { get; set; }
+
         [JsonProperty("isFull")]
         public bool IsFull => Players.Count == MaxPlayer;
+
+        [JsonProperty("hostId")]
+        public long HostId { get; set; }
+
         public string Password { get; set; }
+
         [JsonProperty("players")]
         public List<Player> Players { get; } = new List<Player>();
     }

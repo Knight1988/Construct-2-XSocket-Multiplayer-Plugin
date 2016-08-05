@@ -58,8 +58,20 @@ cr.plugins_.xsockets_multiplayer = function(runtime)
 		var client = self.client = new XSocketWrapper();
 
 		client.onConnected = function (player) {
-			self.runtime.trigger(cr.plugins_.xsockets_multiplayer.prototype.cnds.onConnected, self);
+			self.runtime.trigger(cr.plugins_.xsockets_multiplayer.prototype.cnds.OnConnected, self);
 		};
+
+        client.onRoomJoined = function() {
+            self.runtime.trigger(cr.plugins_.xsockets_multiplayer.prototype.cnds.OnRoomJoined, self);
+        }
+
+        client.onRoomLeft = function() {
+            self.runtime.trigger(cr.plugins_.xsockets_multiplayer.prototype.cnds.OnRoomLeft, self);
+        }
+
+        client.onPlayerJoinedRoom = function() {
+            self.runtime.trigger(cr.plugins_.xsockets_multiplayer.prototype.cnds.OnPlayerJoinedRoom, self);
+        }
 	};
 	
 	// called whenever an instance is destroyed
@@ -143,9 +155,29 @@ cr.plugins_.xsockets_multiplayer = function(runtime)
 	function Cnds() {};
 
 	// XSocket connected event
-	Cnds.prototype.onConnected = function ()
+	Cnds.prototype.OnConnected = function ()
 	{
 		return true;
+	};
+
+    // room joined event
+	Cnds.prototype.OnRoomJoined = function () {
+	    return true;
+	};
+
+    // room joined event
+	Cnds.prototype.OnRoomLeft = function () {
+	    return true;
+	};
+
+    // player joined event
+	Cnds.prototype.OnPlayerJoinedRoom = function () {
+	    return true;
+	};
+
+    // check if player is host
+	Cnds.prototype.IsHost = function () {
+	    return this.client.room.
 	};
 	
 	pluginProto.cnds = new Cnds();
@@ -155,15 +187,27 @@ cr.plugins_.xsockets_multiplayer = function(runtime)
 	function Acts() {};
 	
 	// connect to server
-	Acts.prototype.connect = function (url, name)
+	Acts.prototype.Connect = function (url, name)
 	{
 		this.client.connect(url, name);
 	};
 	
 	// join room
-	Acts.prototype.joinRoom = function (gameName, roomName, maxPlayers, password)
+	Acts.prototype.JoinRoom = function (gameName, roomName, maxPlayers, password)
 	{
 	    this.client.joinRoom(gameName, roomName, maxPlayers, password);
+	};
+	
+	// auto join room
+	Acts.prototype.AutoJoinRoom = function (gameName, roomName, maxPlayers)
+	{
+	    this.client.autoJoinRoom(gameName, roomName, maxPlayers);
+	};
+	
+	// leave room
+	Acts.prototype.LeaveRoom = function ()
+	{
+	    this.client.leaveRoom();
 	};
 	
 	pluginProto.acts = new Acts();
@@ -172,16 +216,41 @@ cr.plugins_.xsockets_multiplayer = function(runtime)
 	// Expressions
 	function Exps() {};
 	
-	// the example expression
-	Exps.prototype.MyExpression = function (ret)	// 'ret' must always be the first parameter - always return the expression's result through it!
+	// the connection url
+	Exps.prototype.ConnectionUrl = function (ret)	// 'ret' must always be the first parameter - always return the expression's result through it!
 	{
-		ret.set_int(1337);				// return our value
-		// ret.set_float(0.5);			// for returning floats
-		// ret.set_string("Hello");		// for ef_return_string
-		// ret.set_any("woo");			// for ef_return_any, accepts either a number or string
+		ret.set_string(this.client.connectionUrl);	// return our value
 	};
 	
-	// ... other expressions here ...
+	// the server version
+	Exps.prototype.ServerVersion = function (ret)	// 'ret' must always be the first parameter - always return the expression's result through it!
+	{
+	    ret.set_string(this.client.serverVersion);	// return our value
+	};
+	
+	// the api version
+	Exps.prototype.ApiVersion = function (ret)	// 'ret' must always be the first parameter - always return the expression's result through it!
+	{
+		ret.set_string(this.client.apiVersion);	// return our value
+	};
+
+    // The name for the current user.
+	Exps.prototype.MyName = function (ret)	// 'ret' must always be the first parameter - always return the expression's result through it!
+	{
+	    ret.set_string(this.client.me.name);	// return our value
+	};
+
+    // The current game name joined.
+	Exps.prototype.CurrentGame = function (ret)	// 'ret' must always be the first parameter - always return the expression's result through it!
+	{
+	    ret.set_string(this.client.room.gameName);	// return our value
+	};
+
+    // The current room joined.
+	Exps.prototype.CurrentRoom = function (ret)	// 'ret' must always be the first parameter - always return the expression's result through it!
+	{
+	    ret.set_string(this.client.room.name);	// return our value
+	};
 	
 	pluginProto.exps = new Exps();
 

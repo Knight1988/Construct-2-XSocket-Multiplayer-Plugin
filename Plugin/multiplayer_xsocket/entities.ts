@@ -22,12 +22,14 @@ class Room {
     name: string;
     gameName: string;
     maxPlayer: number;
+    hostId: number;
     players: Array<number>;
 }
 
 class Player {
     id: number;
     name: string;
+    isHost: boolean;
 }
 
 class Message {

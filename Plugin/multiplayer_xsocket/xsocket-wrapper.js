@@ -2,6 +2,7 @@
 // ReSharper disable InconsistentNaming
 var XSocketWrapper = (function () {
     function XSocketWrapper() {
+        this.apiVersion = xsockets.version;
     }
     Object.defineProperty(XSocketWrapper.prototype, "isScriptLoaded", {
         get: function () {
@@ -12,7 +13,7 @@ var XSocketWrapper = (function () {
     });
     XSocketWrapper.prototype.connect = function (url, name) {
         var self = this;
-        var conn = new xsockets.client(url);
+        var conn = new xsockets.client(self.connectionUrl = url);
         conn.setParameters({ name: name });
         self._controller = conn.controller("game");
         self._controller.on("playerjoinedroom", function (data) {
@@ -37,7 +38,8 @@ var XSocketWrapper = (function () {
             self.onPlayerPositionAndAngle(data);
         });
         self._controller.on("connected", function (data) {
-            self.me = data;
+            self.me = data.me;
+            self.serverVersion = data.serverVersion;
             self.onConnected(data);
         });
         self._controller.onOpen = function () {
@@ -64,6 +66,13 @@ var XSocketWrapper = (function () {
             self.onRoomJoined();
         });
     };
+    XSocketWrapper.prototype.leaveRoom = function () {
+        var self = this;
+        this._controller.invoke("leaveroom").then(function () {
+            self.room = undefined;
+            self.onRoomLeft();
+        });
+    };
     XSocketWrapper.prototype.broadcastMessage = function (tag, value) {
         this._controller.invoke("broadcastmessage", { tag: tag, value: value });
     };
@@ -81,6 +90,7 @@ var XSocketWrapper = (function () {
     };
     XSocketWrapper.prototype.onConnected = function (player) { };
     XSocketWrapper.prototype.onRoomJoined = function () { };
+    XSocketWrapper.prototype.onRoomLeft = function () { };
     XSocketWrapper.prototype.onPlayerJoinedRoom = function (player) { };
     XSocketWrapper.prototype.onPlayerLeaveRoom = function (player) { };
     XSocketWrapper.prototype.onPlayerMessage = function (message) { };

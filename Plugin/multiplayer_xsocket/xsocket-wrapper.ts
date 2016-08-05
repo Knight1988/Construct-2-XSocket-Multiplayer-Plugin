@@ -5,15 +5,18 @@ declare var xsockets: any;
 class XSocketWrapper {
 
     private _controller: any;
+    serverVersion: string;
+    apiVersion: string = xsockets.version;
     me: Player;
     room: Room;
+    connectionUrl: string;
     get isScriptLoaded() {
         return xsockets != undefined;
     }
 
     connect(url: string, name: string) {
         var self = this;
-        var conn = new xsockets.client(url);
+        var conn = new xsockets.client(self.connectionUrl = url);
         conn.setParameters({ name: name });
         self._controller = conn.controller("game");
         self._controller.on("playerjoinedroom",
@@ -45,7 +48,8 @@ class XSocketWrapper {
             });
         self._controller.on("connected",
             data => {
-                self.me = data;
+                self.me = data.me;
+                self.serverVersion = data.serverVersion;
                 self.onConnected(data);
             });
         self._controller.onOpen = () => {
@@ -75,6 +79,14 @@ class XSocketWrapper {
             });
     }
 
+    leaveRoom() {
+        var self = this;
+        this._controller.invoke("leaveroom").then(() => {
+            self.room = undefined;
+            self.onRoomLeft();
+        });
+    }
+
     broadcastMessage(tag: string, value: any) {
         this._controller.invoke("broadcastmessage", { tag: tag, value: value });
     }
@@ -98,6 +110,8 @@ class XSocketWrapper {
     onConnected(player: Player) { }
 
     onRoomJoined() { }
+
+    onRoomLeft() { }
 
     onPlayerJoinedRoom(player: Player) { }
 

@@ -56,10 +56,19 @@
 //				script_name);		// corresponding runtime function name
 
 // Connected
-AddCondition(1, cf_trigger, "On connected", "Signalling", "On signalling connected", "Triggered when successfully connected to the signalling server.", "onConnected");
+AddCondition(1, cf_trigger, "On connected", "Signalling", "On signalling connected", "Triggered when successfully connected to the signalling server.", "OnConnected");
 
 // Room joined
-AddCondition(2, cf_trigger, "On joined room", "Signalling", "On signalling joined room", "Triggered upon successfully joining a room.", "onRoomJoined");
+AddCondition(2, cf_trigger, "On joined room", "Signalling", "On signalling joined room", "Triggered upon successfully joining a room.", "OnRoomJoined");
+
+// Leave room
+AddCondition(3, cf_trigger, "On left room", "Signalling", "On signalling left room", "Triggered upon successfully leaving a room.", "OnRoomLeft");
+
+// Player connected
+AddCondition(4, cf_trigger, "On player joined room", "Room", "On player joined room", "Triggered when a player joined room.", "OnPlayerJoinedRoom");
+
+// Check if is host
+AddCondition(6, cf_none, "Is host", "Room", "Is host", "True if host of the current room.", "IsHost");
 
 ////////////////////////////////////////
 // Actions
@@ -75,13 +84,23 @@ AddCondition(2, cf_trigger, "On joined room", "Signalling", "On signalling joine
 // Connect to server
 AddStringParam("Server", "The signalling server URL to connect to.", "\"ws://localhost:4502\"");
 AddStringParam("Name", "The desired name to use on the server.");
-AddAction(1, af_none, "Connect", "Signalling", "Connect to signalling server <b>{0}</b>", "Connect to a signalling server to be able to join rooms.", "connect");
+AddAction(1, af_none, "Connect", "Signalling", "Connect to signalling server <b>{0}</b>", "Connect to a signalling server to be able to join rooms.", "Connect");
 
 // Join room
 AddStringParam("Game", "A string uniquely identifying this game on the server. To help ensure uniqueness, include your reverse domain, e.g. \"net.example.MyGame\".", "\"net.example.MyGame\"");
 AddStringParam("Room", "The name of the room to request joining.");
 AddNumberParam("Max players", "The maximum number of players that can join this room. Only the host's value is used. Leave 0 for unlimited.");
-AddAction(2, af_none, "Join room", "Signalling", "Join room <b>{1}</b> for game <i>{0}</i> (max peers: <i>{2}</i>)", "Once logged in, join a room to meet other players.", "joinRoom");
+AddStringParam("Password", "Password to join room.");
+AddAction(2, af_none, "Join room", "Signalling", "Join room <b>{1}</b> for game <i>{0}</i> (max peers: <i>{2}</i>, password: <i>{3}<i>)", "Once logged in, join a room to meet other players.", "JoinRoom");
+
+// Auto join room
+AddStringParam("Game", "A string uniquely identifying this game on the server. To help ensure uniqueness, include you or your company's name, e.g. \"net.example.MyGame\".", "\"net.example.MyGame\"");
+AddStringParam("First room", "The name of the first room to request joining. If the room is full, subsequent rooms will be checked (\"room\", \"room2\", \"room3\"...).");
+AddNumberParam("Max peers", "The number of peers per room. Once full, later peers will be sent to the next room.", "2");
+AddAction(3, af_none, "Auto-join room", "Signalling", "Auto-join from room <b>{1}</b> for game <i>{0}</i> (max peers: <i>{2}</i>)", "Join the first room which is not full.", "AutoJoinRoom");
+
+// Leave room
+AddAction(6, af_none, "Leave room", "Signalling", "Leave room", "Request to leave the current room on the signalling server. Player connections are not affected.", "LeaveRoom");
 
 ////////////////////////////////////////
 // Expressions
@@ -94,8 +113,12 @@ AddAction(2, af_none, "Join room", "Signalling", "Join room <b>{1}</b> for game 
 //				 exp_name,		// the expression name after the dot, e.g. "foo" for "myobject.foo" - also the runtime function name
 //				 description);	// description in expressions panel
 
-// example
-AddExpression(0, ef_return_number, "Leet expression", "My category", "MyExpression", "Return the number 1337.");
+AddExpression(0, ef_return_string, "", "Signalling", "ConnectionUrl", "The URL of the current connecting server.");
+AddExpression(1, ef_return_string, "", "Signalling", "ServerVersion", "The version of the current connecting server.");
+AddExpression(2, ef_return_string, "", "Signalling", "ApiVersion", "The version of the current api.");
+AddExpression(3, ef_return_string, "", "Signalling", "MyName", "The name for the current user.");
+AddExpression(4, ef_return_string, "", "Signalling", "CurrentGame", "The current game name joined.");
+AddExpression(5, ef_return_string, "", "Signalling", "CurrentRoom", "The current room joined.");
 
 ////////////////////////////////////////
 ACESDone();

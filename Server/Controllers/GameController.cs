@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GameServer.Model;
 using XSockets.Core.XSocket;
 using XSockets.Core.XSocket.Helpers;
+using XSockets.Plugin.Framework.Attributes;
 
 namespace GameServer.Controllers
 {
@@ -13,12 +15,13 @@ namespace GameServer.Controllers
     /// </summary>
     public class GameController : XSocketController
     {
+        private static readonly string Version = Assembly.GetAssembly(typeof(XSocketController)).GetName().Version.ToString();
         private static long _idCounter = 1;
         private static readonly List<Room> Rooms = new List<Room>();
         private Room _joinedRoom;
         private Player _me;
 
-        public async Task LeaveRoom()
+        public async Task<bool> LeaveRoom()
         {
             if (_joinedRoom != null)
             {
@@ -29,6 +32,8 @@ namespace GameServer.Controllers
                 // remove room if player = 0
                 if (_joinedRoom.Players.Count == 0) Rooms.Remove(_joinedRoom);
             }
+
+            return true;
         }
 
         /// <summary>
@@ -41,15 +46,29 @@ namespace GameServer.Controllers
 
             if (room.MaxPlayer == room.Players.Count) return new JoinRoomResult("Room is full");
 
-            var player = new Player(_me.Id, _me.Name);
+            var player = new Player(_me.Id, _me.Name, room.Players.Count == 0);
             // add player to room
             room.Players.Add(player);
             // set current room
             _joinedRoom = room;
+            // promote host
+            await PromoteHost(player.Id);
             // send player joined room event
             await this.InvokeTo(p => p._joinedRoom == room && p._me.Id != _me.Id, player, "playerjoinedroom");
 
             return new JoinRoomResult(room);
+        }
+
+        public async Task PromoteHost(long playerId)
+        {
+            if (_joinedRoom == null) return;
+            
+            if (_joinedRoom.Players.Count == 0 || _me.IsHost)
+            {
+                _joinedRoom.Players.ForEach(p => p.IsHost = p.Id == playerId);
+                _joinedRoom.HostId = playerId;
+                await this.InvokeTo(p => p._me.Id == playerId, "promoteHost");
+            }
         }
 
         /// <summary>
@@ -98,7 +117,7 @@ namespace GameServer.Controllers
         /// <param name="maxPlayer">Max players</param>
         /// <param name="password">Room's password</param>
         /// <returns>Room info if success or message if failed</returns>
-        private Room CreateRoom(string gameName, string roomName, int maxPlayer,
+        private static Room CreateRoom(string gameName, string roomName, int maxPlayer,
             string password)
         {
             // Create room
@@ -122,7 +141,7 @@ namespace GameServer.Controllers
         /// <param name="gameName">Game name</param>
         /// <param name="roomName">Room name</param>
         /// <returns></returns>
-        private string GetUniqueRoomName(string gameName, string roomName)
+        private static string GetUniqueRoomName(string gameName, string roomName)
         {
             var room = Rooms.Where(p => p.GameName == gameName && p.Name.StartsWith(roomName)).OrderByDescending(p => p).FirstOrDefault();
 
@@ -188,8 +207,12 @@ namespace GameServer.Controllers
 
         public override async Task OnOpened()
         {
-            _me = new Player(_idCounter++, this.GetParameter("name"));
-            await this.Invoke(_me, "connected");
+            _me = new Player(_idCounter++, this.GetParameter("name"), false);
+            await this.Invoke(new
+            {
+                me = _me,
+                serverVersion = Version
+            }, "connected");
             await base.OnOpened();
         }
     }
