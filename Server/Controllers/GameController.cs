@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using GameServer.Model;
 using XSockets.Core.XSocket;
 using XSockets.Core.XSocket.Helpers;
-using XSockets.Plugin.Framework.Attributes;
 
 namespace GameServer.Controllers
 {
@@ -142,7 +141,7 @@ namespace GameServer.Controllers
         /// <returns></returns>
         private static string GetUniqueRoomName(string gameName, string roomName)
         {
-            var room = Rooms.Where(p => p.GameName == gameName && p.Name.StartsWith(roomName)).OrderByDescending(p => p).FirstOrDefault();
+            var room = Rooms.Where(p => p.GameName == gameName && p.Name.StartsWith(roomName)).OrderByDescending(p => p.Name).FirstOrDefault();
 
             if (room == null) return roomName;
 

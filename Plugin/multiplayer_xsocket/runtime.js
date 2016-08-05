@@ -72,6 +72,12 @@ cr.plugins_.xsockets_multiplayer = function(runtime)
         client.onPlayerJoinedRoom = function() {
             self.runtime.trigger(cr.plugins_.xsockets_multiplayer.prototype.cnds.OnPlayerJoinedRoom, self);
         }
+
+        client.onPlayerMessage = function (message) {
+            self.tag = message.tag;
+            self.message = message.value;
+            self.runtime.trigger(cr.plugins_.xsockets_multiplayer.prototype.cnds.OnPlayerMessage, self);
+        }
 	};
 	
 	// called whenever an instance is destroyed
@@ -179,6 +185,11 @@ cr.plugins_.xsockets_multiplayer = function(runtime)
 	Cnds.prototype.IsHost = function () {
 	    return this.client.room.hostId == this.client.me.id;
 	};
+
+    // on player message
+	Cnds.prototype.OnPlayerMessage = function (tag) {
+	    return this.tag == tag;
+	};
 	
 	pluginProto.cnds = new Cnds();
 	
@@ -208,6 +219,12 @@ cr.plugins_.xsockets_multiplayer = function(runtime)
 	Acts.prototype.LeaveRoom = function ()
 	{
 	    this.client.leaveRoom();
+	};
+	
+	// Broadcast message
+	Acts.prototype.BroadcastMessage = function (tag, message)
+	{
+	    this.client.broadcastMessage(tag, message);
 	};
 	
 	pluginProto.acts = new Acts();
@@ -250,6 +267,12 @@ cr.plugins_.xsockets_multiplayer = function(runtime)
 	Exps.prototype.CurrentRoom = function (ret)	// 'ret' must always be the first parameter - always return the expression's result through it!
 	{
 	    ret.set_string(this.client.room.name);	// return our value
+	};
+
+    // The current room joined.
+	Exps.prototype.Message = function (ret)	// 'ret' must always be the first parameter - always return the expression's result through it!
+	{
+	    ret.set_any(this.message);	// return our value
 	};
 	
 	pluginProto.exps = new Exps();

@@ -70,6 +70,10 @@ AddCondition(4, cf_trigger, "On player joined room", "Room", "On player joined r
 // Check if is host
 AddCondition(5, cf_none, "Is host", "Room", "Is host", "True if host of the current room.", "IsHost");
 
+// on message received
+AddStringParam("Tag", "The tag to identify the message type.");
+AddCondition(6, cf_trigger, "On player message", "Room", "On peer message <i>{0}</i>", "Triggered when received a message with a specific tag from a player.", "OnPlayerMessage");
+
 ////////////////////////////////////////
 // Actions
 
@@ -100,7 +104,12 @@ AddNumberParam("Max peers", "The number of peers per room. Once full, later peer
 AddAction(3, af_none, "Auto-join room", "Signalling", "Auto-join from room <b>{1}</b> for game <i>{0}</i> (max peers: <i>{2}</i>)", "Join the first room which is not full.", "AutoJoinRoom");
 
 // Leave room
-AddAction(6, af_none, "Leave room", "Signalling", "Leave room", "Request to leave the current room on the signalling server. Player connections are not affected.", "LeaveRoom");
+AddAction(4, af_none, "Leave room", "Signalling", "Leave room", "Request to leave the current room on the signalling server. Player connections are not affected.", "LeaveRoom");
+
+// Broadcast message
+AddStringParam("Tag", "A tag to identify this kind of message.");
+AddAnyTypeParam("Message", "The message data to send.");
+AddAction(5, af_none, "Broadcast message", "Room", "Broadcast tag <i>{0}</i> message <b>{1}</b>", "Send a message every player in the room.", "BroadcastMessage");
 
 ////////////////////////////////////////
 // Expressions
@@ -119,6 +128,7 @@ AddExpression(2, ef_return_string, "", "Signalling", "ApiVersion", "The version 
 AddExpression(3, ef_return_string, "", "Signalling", "MyName", "The name for the current user.");
 AddExpression(4, ef_return_string, "", "Signalling", "CurrentGame", "The current game name joined.");
 AddExpression(5, ef_return_string, "", "Signalling", "CurrentRoom", "The current room joined.");
+AddExpression(6, ef_return_any, "", "Room", "Message", "The message received in a message trigger.");
 
 ////////////////////////////////////////
 ACESDone();
