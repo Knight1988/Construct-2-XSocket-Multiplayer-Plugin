@@ -18,12 +18,23 @@ class PositionAndAngle extends SyncObjectBase {
     angle: number;
 }
 
+class ObjectInfo {
+    syncId: number;
+    name: string;
+    x: number;
+    y: number;
+    visible: boolean;
+    layer: string;
+}
+
 class Room {
     name: string;
     gameName: string;
     maxPlayer: number;
     hostId: number;
-    players: Array<number>;
+    players: Array<Player>;
+    playerJoined: Player;
+    playerLeft: Player;
 }
 
 class Player {

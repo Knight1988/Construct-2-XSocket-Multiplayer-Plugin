@@ -29,6 +29,11 @@ var PositionAndAngle = (function (_super) {
     }
     return PositionAndAngle;
 }(SyncObjectBase));
+var ObjectInfo = (function () {
+    function ObjectInfo() {
+    }
+    return ObjectInfo;
+}());
 var Room = (function () {
     function Room() {
     }

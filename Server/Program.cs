@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using XSockets.Core.Common.Socket;
 using XSockets.Plugin.Framework;
 
-namespace Server
+namespace GameServer
 {
     class Program
     {

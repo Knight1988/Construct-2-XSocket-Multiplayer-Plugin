@@ -244,5 +244,6 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 
-# LingCorServer
+# LingCor
 LingCorServer/
+LingCorPlugin/
