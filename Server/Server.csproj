@@ -114,6 +114,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\GameController.cs" />
+    <Compile Include="Controllers\PlayerController.cs" />
+    <Compile Include="Controllers\RoomController.cs" />
+    <Compile Include="Model\JoinRoomResult.cs" />
+    <Compile Include="Model\PeerMessage.cs" />
+    <Compile Include="Model\Player.cs" />
+    <Compile Include="Model\Position.cs" />
+    <Compile Include="Model\Room.cs" />
+    <Compile Include="Model\Topic.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XSocketsNET\DefaultLogger.cs" />
@@ -128,12 +137,6 @@
   <ItemGroup>
     <Content Include="XSocketsNET\dummy.txt" />
     <Content Include="XSocketsNET\ServerExample\ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ServerController\ServerController.csproj">
-      <Project>{650ba651-4780-45cd-9c96-b6bb125347f4}</Project>
-      <Name>ServerController</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
