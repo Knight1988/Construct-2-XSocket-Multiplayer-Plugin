@@ -1,11 +1,10 @@
 using System.Reflection;
 using System.Threading.Tasks;
-using ServerController.Model;
-using XSockets.Core.Common.Socket.Event.Interface;
+using GameServer.Model;
 using XSockets.Core.XSocket;
 using XSockets.Core.XSocket.Helpers;
 
-namespace ServerController
+namespace GameServer.Controllers
 {
     /// <summary>
     /// Implement/Override your custom actionmethods, events etc in this real-time MVC controller

@@ -1,7 +1,4 @@
-using System.Threading.Tasks;
-using ServerController.Model;
-
-namespace ServerController
+namespace GameServer.Controllers
 {
     /// <summary>
     /// Implement/Override your custom actionmethods, events etc in this real-time MVC controller

@@ -23,20 +23,22 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="index.html" />
-    <Content Include="multiplayer_xsocket\common.js" />
-    <Content Include="multiplayer_xsocket\edittime.js" />
-    <Content Include="multiplayer_xsocket\PluginIcon.ico" />
-    <Content Include="multiplayer_xsocket\runtime.js" />
-    <Content Include="multiplayer_xsocket\xsockets.latest.js" />
+    <Content Include="Multiplayer\files\multiplayer_lingcor\common.js" />
+    <Content Include="Multiplayer\files\multiplayer_lingcor\edittime.js" />
+    <Content Include="Multiplayer\files\multiplayer_lingcor\PluginIcon.ico" />
+    <Content Include="Multiplayer\files\multiplayer_lingcor\runtime.js" />
+    <Content Include="Multiplayer\files\multiplayer_lingcor\xsockets.latest.js" />
+    <Content Include="Multiplayer\info.xml" />
     <Content Include="scripts\XSockets\xsockets.latest.js" />
     <Content Include="scripts\XSockets\xsockets.latest.min.js" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="multiplayer_xsocket\client.ts" />
-    <TypeScriptCompile Include="multiplayer_xsocket\entities.ts" />
-    <TypeScriptCompile Include="multiplayer_xsocket\game-client.ts" />
-    <TypeScriptCompile Include="multiplayer_xsocket\room-client.ts" />
+    <TypeScriptCompile Include="Multiplayer\files\multiplayer_lingcor\client.ts" />
+    <TypeScriptCompile Include="Multiplayer\files\multiplayer_lingcor\entities.ts" />
+    <TypeScriptCompile Include="Multiplayer\files\multiplayer_lingcor\game-client.ts" />
+    <TypeScriptCompile Include="Multiplayer\files\multiplayer_lingcor\lingcor-client.ts" />
+    <TypeScriptCompile Include="Multiplayer\files\multiplayer_lingcor\room-client.ts" />
     <TypeScriptCompile Include="scripts\typings\jquery\jquery.d.ts" />
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace ServerController.Model
+namespace GameServer.Model
 {
     [JsonObject(MemberSerialization.OptIn)]
     public class Player 

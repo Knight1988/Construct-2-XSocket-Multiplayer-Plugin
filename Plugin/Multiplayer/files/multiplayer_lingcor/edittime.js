@@ -1,8 +1,8 @@
 ﻿function GetPluginSettings()
 {
 	return {
-		"name":			"XSocket Multiplayer",	// as appears in 'insert object' dialog, can be changed as long as "id" stays the same
-		"id":			"xsockets_multiplayer",	// this is used to identify this plugin and is saved to the project; never change it
+		"name":			"LingCor Multiplayer",	// as appears in 'insert object' dialog, can be changed as long as "id" stays the same
+		"id":			"lingcor_multiplayer",	// this is used to identify this plugin and is saved to the project; never change it
 		"version":		"1.0",						// (float in x.y format) Plugin version - C2 shows compatibility warnings based on this
 		"description":	"Create real-time multiplayer online games using XSocket Javascript V6.",
 		"author":		"Squall Leonhart",
@@ -10,7 +10,7 @@
 		"category":		"Web",						// Prefer to re-use existing categories, but you can set anything here
 		"type":			"object",					// either "world" (appears in layout and is drawn), else "object"
 		"rotatable":	true,						// only used when "type" is "world".  Enables an angle property on the object.
-		"dependency": "xsockets.latest.min.js;xsocket-wrapper.js",
+		"dependency": "xsockets.latest.js;client.js;room-client.js;game-client.js;lingcor-client.js",
 		"flags":		0							// uncomment lines to enable flags...
 						| pf_singleglobal			// exists project-wide, e.g. mouse, keyboard.  "type" must be "object".
 					//	| pf_texture				// object has a single texture (e.g. tiled background)
@@ -56,23 +56,29 @@
 //				script_name);		// corresponding runtime function name
 
 // Connected
-AddCondition(1, cf_trigger, "On connected", "Signalling", "On signalling connected", "Triggered when successfully connected to the signalling server.", "OnConnected");
+AddCondition(0, cf_trigger, "On connected", "Signalling", "On connected", "Triggered when successfully connected to the signalling server.", "OnConnected");
 
 // Room joined
-AddCondition(2, cf_trigger, "On joined room", "Signalling", "On signalling joined room", "Triggered upon successfully joining a room.", "OnRoomJoined");
+AddCondition(1, cf_trigger, "On joined room", "Signalling", "On joined room", "Triggered upon successfully joining a room.", "OnJoinedRoom");
 
 // Leave room
-AddCondition(3, cf_trigger, "On left room", "Signalling", "On signalling left room", "Triggered upon successfully leaving a room.", "OnRoomLeft");
+AddCondition(2, cf_trigger, "On left room", "Signalling", "On left room", "Triggered upon successfully leaving a room.", "OnLeftRoom");
 
 // Player connected
-AddCondition(4, cf_trigger, "On player joined room", "Room", "On player joined room", "Triggered when a player joined room.", "OnPlayerJoinedRoom");
+AddCondition(3, cf_trigger, "On player joined room", "Room", "On player joined room", "Triggered when a player joined room.", "OnPlayerJoinedRoom");
 
 // Check if is host
-AddCondition(5, cf_none, "Is host", "Room", "Is host", "True if host of the current room.", "IsHost");
+AddCondition(4, cf_none, "Is host", "Room", "Is host", "True if host of the current room.", "IsHost");
 
 // on message received
 AddStringParam("Tag", "The tag to identify the message type.");
-AddCondition(6, cf_trigger, "On player message", "Room", "On peer message <i>{0}</i>", "Triggered when received a message with a specific tag from a player.", "OnPlayerMessage");
+AddCondition(5, cf_trigger, "On player message", "Room", "On player message <i>{0}</i>", "Triggered when received a message with a specific tag from a player.", "OnPlayerMessage");
+
+// on player left room
+AddCondition(7, cf_trigger, "On player left room", "Room", "On player left room", "Trigger when a player leave room.", "OnPlayerLeftRoom");
+
+// on host changed
+AddCondition(8, cf_trigger, "On room's host is changed", "Room", "On room's host is changed", "Trigger when a player become new host.", "OnHostChanged");
 
 ////////////////////////////////////////
 // Actions
@@ -88,28 +94,39 @@ AddCondition(6, cf_trigger, "On player message", "Room", "On peer message <i>{0}
 // Connect to server
 AddStringParam("Server", "The signalling server URL to connect to.", "\"ws://localhost:4502\"");
 AddStringParam("Name", "The desired name to use on the server.");
-AddAction(1, af_none, "Connect", "Signalling", "Connect to signalling server <b>{0}</b>", "Connect to a signalling server to be able to join rooms.", "Connect");
+AddAction(0, af_none, "Connect", "Signalling", "Connect to signalling server <b>{0}</b> (name: <i>{1}<i>)", "Connect to a signalling server to be able to join rooms.", "Connect");
 
 // Join room
 AddStringParam("Game", "A string uniquely identifying this game on the server. To help ensure uniqueness, include your reverse domain, e.g. \"net.example.MyGame\".", "\"net.example.MyGame\"");
 AddStringParam("Room", "The name of the room to request joining.");
 AddNumberParam("Max players", "The maximum number of players that can join this room. Only the host's value is used. Leave 0 for unlimited.");
 AddStringParam("Password", "Password to join room.");
-AddAction(2, af_none, "Join room", "Signalling", "Join room <b>{1}</b> for game <i>{0}</i> (max peers: <i>{2}</i>, password: <i>{3}<i>)", "Once logged in, join a room to meet other players.", "JoinRoom");
+AddAction(1, af_none, "Join room", "Room", "Join room <b>{1}</b> for game <i>{0}</i> (max peers: <i>{2}</i>, password: <i>{3}<i>)", "Once logged in, join a room to meet other players.", "JoinRoom");
 
 // Auto join room
 AddStringParam("Game", "A string uniquely identifying this game on the server. To help ensure uniqueness, include you or your company's name, e.g. \"net.example.MyGame\".", "\"net.example.MyGame\"");
 AddStringParam("First room", "The name of the first room to request joining. If the room is full, subsequent rooms will be checked (\"room\", \"room2\", \"room3\"...).");
 AddNumberParam("Max peers", "The number of peers per room. Once full, later peers will be sent to the next room.", "2");
-AddAction(3, af_none, "Auto-join room", "Signalling", "Auto-join from room <b>{1}</b> for game <i>{0}</i> (max peers: <i>{2}</i>)", "Join the first room which is not full.", "AutoJoinRoom");
+AddAction(2, af_none, "Auto-join room", "Room", "Auto-join from room <b>{1}</b> for game <i>{0}</i> (max peers: <i>{2}</i>)", "Join the first room which is not full.", "AutoJoinRoom");
 
 // Leave room
-AddAction(4, af_none, "Leave room", "Signalling", "Leave room", "Request to leave the current room on the signalling server. Player connections are not affected.", "LeaveRoom");
+AddAction(3, af_none, "Leave room", "Room", "Leave room", "Request to leave the current room on the signalling server. Player connections are not affected.", "LeaveRoom");
 
 // Broadcast message
 AddStringParam("Tag", "A tag to identify this kind of message.");
 AddAnyTypeParam("Message", "The message data to send.");
-AddAction(5, af_none, "Broadcast message", "Room", "Broadcast tag <i>{0}</i> message <b>{1}</b>", "Send a message every player in the room.", "BroadcastMessage");
+AddAction(4, af_none, "Broadcast message", "Room", "Broadcast tag <i>{0}</i> message <b>{1}</b>", "Send a message every player in the room.", "BroadcastMessage");
+
+// Sync objects
+AddObjectParam("Object", "Object to update.")
+AddAction(5, af_none, "Update object info", "Game", "Update object {0}", "Update object to other player.", "UpdateObjectInfo");
+
+AddNumberParam("Player Id", "Id of player to promote.")
+AddAction(6, af_none, "Promote a player into host", "Game", "Promote player {0}", "Promote a player into host.", "PromoteHost");
+
+// Sync objects
+AddObjectParam("Object", "Object to destroy.")
+AddAction(7, af_none, "Destroy object", "Game", "Destroy object {0}", "Destroy object in both host and player.", "DestroyObject");
 
 ////////////////////////////////////////
 // Expressions
@@ -129,6 +146,13 @@ AddExpression(3, ef_return_string, "", "Signalling", "MyName", "The name for the
 AddExpression(4, ef_return_string, "", "Signalling", "CurrentGame", "The current game name joined.");
 AddExpression(5, ef_return_string, "", "Signalling", "CurrentRoom", "The current room joined.");
 AddExpression(6, ef_return_any, "", "Room", "Message", "The message received in a message trigger.");
+AddExpression(7, ef_return_number, "", "Room", "MyId", "The id of me.");
+AddExpression(8, ef_return_number, "", "Room", "MyName", "My name.");
+AddExpression(9, ef_return_number, "", "Room", "LeftPlayerId", "The id of player who left room.");
+AddExpression(10, ef_return_string, "", "Room", "LeftPlayerName", "The name of player who left room.");
+AddExpression(11, ef_return_number, "", "Room", "JoinedPlayerId", "The id of player who joined room.");
+AddExpression(12, ef_return_string, "", "Room", "JoinedPlayerName", "The name of player who joined room.");
+
 
 ////////////////////////////////////////
 ACESDone();
