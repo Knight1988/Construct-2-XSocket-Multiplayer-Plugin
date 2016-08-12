@@ -23,26 +23,36 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="index.html" />
-    <Content Include="plugin package\files\multiplayer_xsocket\common.js" />
-    <Content Include="plugin package\files\multiplayer_xsocket\edittime.js" />
-    <Content Include="plugin package\files\multiplayer_xsocket\PluginIcon.ico" />
-    <Content Include="plugin package\files\multiplayer_xsocket\runtime.js" />
-    <Content Include="plugin package\files\multiplayer_xsocket\xsockets.latest.js" />
-    <Content Include="plugin package\info.xml" />
+    <Content Include="Multiplayer\files\multiplayer_xsocket\client.js" />
+    <Content Include="Multiplayer\files\multiplayer_xsocket\common.js" />
+    <Content Include="Multiplayer\files\multiplayer_xsocket\edittime.js" />
+    <Content Include="Multiplayer\files\multiplayer_xsocket\entities.js" />
+    <Content Include="Multiplayer\files\multiplayer_xsocket\game-client.js" />
+    <Content Include="Multiplayer\files\multiplayer_xsocket\PluginIcon.ico" />
+    <Content Include="Multiplayer\files\multiplayer_xsocket\room-client.js" />
+    <Content Include="Multiplayer\files\multiplayer_xsocket\runtime.js" />
+    <Content Include="Multiplayer\files\multiplayer_xsocket\xsocket-wrapper.js" />
+    <Content Include="Multiplayer\files\multiplayer_xsocket\xsockets.latest.js" />
+    <Content Include="Multiplayer\info.xml" />
     <Content Include="scripts\XSockets\xsockets.latest.js" />
     <Content Include="scripts\XSockets\xsockets.latest.min.js" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="plugin package\files\multiplayer_xsocket\client.ts" />
-    <TypeScriptCompile Include="plugin package\files\multiplayer_xsocket\entities.ts" />
-    <TypeScriptCompile Include="plugin package\files\multiplayer_xsocket\game-client.ts" />
-    <TypeScriptCompile Include="plugin package\files\multiplayer_xsocket\room-client.ts" />
+    <TypeScriptCompile Include="Multiplayer\files\multiplayer_xsocket\client.ts" />
+    <TypeScriptCompile Include="Multiplayer\files\multiplayer_xsocket\entities.ts" />
+    <TypeScriptCompile Include="Multiplayer\files\multiplayer_xsocket\game-client.ts" />
+    <TypeScriptCompile Include="Multiplayer\files\multiplayer_xsocket\room-client.ts" />
     <TypeScriptCompile Include="scripts\typings\jquery\jquery.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="scripts\XSockets\xsockets.latest.js.map" />
     <Content Include="packages.config" />
+    <Content Include="Multiplayer\files\multiplayer_xsocket\client.js.map" />
+    <Content Include="Multiplayer\files\multiplayer_xsocket\entities.js.map" />
+    <Content Include="Multiplayer\files\multiplayer_xsocket\game-client.js.map" />
+    <Content Include="Multiplayer\files\multiplayer_xsocket\room-client.js.map" />
+    <Content Include="Multiplayer\files\multiplayer_xsocket\xsocket-wrapper.js.map" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
