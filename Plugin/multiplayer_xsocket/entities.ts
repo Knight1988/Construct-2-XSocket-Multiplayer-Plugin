@@ -25,6 +25,7 @@ class ObjectInfo {
     y: number;
     visible: boolean;
     layer: string;
+    tick: number;
 }
 
 class Room {
