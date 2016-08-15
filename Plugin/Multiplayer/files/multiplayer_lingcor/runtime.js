@@ -45,7 +45,9 @@ cr.plugins_.lingcor_multiplayer = function (runtime)
 		// any other properties you need, e.g...
 	    // this.myValue = 0;
 		var self = this;
-	    this.wayPoints = {};
+		this.wayPoints = {};
+	    this.instList = {};
+	    this.histories = {};
 		var client = self.client = new LingCorClient();
 
 		client.onConnected(function (player) {
@@ -80,6 +82,9 @@ cr.plugins_.lingcor_multiplayer = function (runtime)
             self.destroyObjects(objs);
         });
 
+        this.runtime.addDestroyCallback(function(inst) {
+            self.onObjectDestroyed.call(self, inst);
+        });
 	    this.runtime.tickMe(this);
 	};
 	
@@ -186,6 +191,7 @@ cr.plugins_.lingcor_multiplayer = function (runtime)
 	            inst = this.runtime.createInstance(type, layer, obj.x, obj.y);
 	            // Fire 'On created'
 	            this.runtime.trigger(Object.getPrototypeOf(type.plugin).cnds.OnCreated, inst);
+	            this.runtime.trigger(cr.plugins_.lingcor_multiplayer.prototype.cnds.OnObjectCreated, inst);
 	            inst.syncId = obj.syncId;
 	        } else {
                 //Object.getPrototypeOf(type.plugin).acts.SetPos.call(inst, obj.x, obj.y);
@@ -193,6 +199,7 @@ cr.plugins_.lingcor_multiplayer = function (runtime)
 	            this.addWayPointTimeTravel(inst, obj.x, obj.y, 10);
 	        }
 	        Object.getPrototypeOf(type.plugin).acts.SetVisible.call(inst, obj.visible);
+	        Object.getPrototypeOf(type.plugin).acts.SetAnim.call(inst, obj.animation, "beginning");
 	    }
 	}
 
@@ -252,8 +259,69 @@ cr.plugins_.lingcor_multiplayer = function (runtime)
         }
     }
 
-    instanceProto.tick = function() {
+    instanceProto.updateObjectHistories = function() {
+        for (var syncId in this.instList) {
+            // get instance
+            var inst = this.instList[syncId];
+            // create instance history
+            var history = this.getObjectHistory(inst);
+
+            // create history array
+            if (this.histories[syncId] == undefined) {
+                this.histories[syncId] = [];
+            } else {
+                var histories = this.histories[syncId];
+                // get last history
+                var lastHistory = histories[histories.length - 1];
+                // return if instance unchanged
+                if (this.compareHistory(history, lastHistory)) {
+                    lastHistory.tick = this.runtime.tickCount;
+                    return;
+                }
+            }
+            // add history
+            this.histories[syncId].push(history);
+        }
+    }
+
+    instanceProto.syncObjectHistories = function () {
+        if (this.runtime.tickCount % 10 != 0) return;
+
+        for (var syncId in this.histories) {
+            this.client.updateHistories(this.histories);
+        }
+    }
+
+    instanceProto.compareHistory = function (h1, h2) {
+        // compare 2 history
+        return h1.x == h2.x && h1.y == h2.y && h1.layer == h2.layer && h1.visible == h2.visible;
+    }
+
+    instanceProto.getObjectHistory = function (inst) {
+        return {
+            x: inst.x,
+            y: inst.y,
+            layer: inst.layer.name,
+            visible: inst.visible,
+            tick: this.runtime.tickCount
+        };
+    }
+
+    instanceProto.tick = function () {
+        this.updateObjectHistories();
+        this.syncObjectHistories();
         this.syncObjects();
+    }
+
+    instanceProto.onObjectDestroyed = function(inst) {
+        if (inst.syncId === undefined) return;
+        
+        var obj = {
+            syncId: inst.syncId,
+            name: inst.type.name,
+        }
+    
+        this.client.destroyObjects([obj]);
     }
 
 	//////////////////////////////////////
@@ -293,17 +361,22 @@ cr.plugins_.lingcor_multiplayer = function (runtime)
 
     // on Promote host
 	Cnds.prototype.OnPromoteHost = function (tag) {
-	    return true
+	    return true;
 	};
 
     // on player left room
 	Cnds.prototype.OnPlayerLeftRoom = function (tag) {
-	    return true
+	    return true;
 	};
 
     // on host changed
 	Cnds.prototype.OnHostChanged = function (tag) {
-	    return true
+	    return true;
+	};
+
+    // on object created
+	Cnds.prototype.OnObjectCreated = function () {
+	    return true;
 	};
 	
 	pluginProto.cnds = new Cnds();
@@ -352,16 +425,16 @@ cr.plugins_.lingcor_multiplayer = function (runtime)
 	Acts.prototype.UpdateObjectInfo = function (type) {
 	    var objs = [];
 	    for (var i = 0; i < type.instances.length; i++) {
-	        var instance = type.instances[i];
-	        var syncId = instance.syncId == undefined ? instance.uid : instance.syncId;
+	        var inst = type.instances[i];
+	        var syncId = inst.syncId == undefined ? inst.uid : inst.syncId;
 	        var obj = {
-	            syncId: instance.syncId = syncId,
-	            x: instance.x,
-	            y: instance.y,
-	            name: instance.type.name,
-	            layer: instance.layer.name,
-	            visible: instance.visible,
-	            tick: this.runtime.tickCount
+	            syncId: inst.syncId = syncId,
+	            x: inst.x,
+	            y: inst.y,
+	            name: inst.type.name,
+	            layer: inst.layer.name,
+	            visible: inst.visible,
+                animation: inst.cur_animation.name,
 	        }
 	        objs.push(obj);
 	    }
@@ -373,21 +446,30 @@ cr.plugins_.lingcor_multiplayer = function (runtime)
 	    var objs = [];
 	    for (var i = 0; i < type.instances.length; i++) {
             // get instance
-	        var instance = type.instances[i];
+	        var inst = type.instances[i];
             // skip if no syncId
-	        if (instance.syncId == undefined) continue;
+	        if (inst.syncId == undefined) continue;
 
 	        var obj = {
-	            syncId: instance.syncId,
-	            name: instance.type.name,
+	            syncId: inst.syncId,
+	            name: inst.type.name,
 	        }
 	        objs.push(obj);
 	    }
 	    this.client.destroyObjects(objs);
 	    this.destroyObjects(objs);
 	};
-	
-	pluginProto.acts = new Acts();
+
+    // Sync object
+    Acts.prototype.SyncObject = function(type) {
+        for (var i = 0; i < type.instances.length; i++) {
+            var inst = type.instances[i];
+            if (inst.syncId == undefined) inst.syncId = this.client.me.id + "_" + inst.uid;
+            this.instList[inst.syncId] = inst;
+        }
+    };
+
+    pluginProto.acts = new Acts();
 	
 	//////////////////////////////////////
 	// Expressions

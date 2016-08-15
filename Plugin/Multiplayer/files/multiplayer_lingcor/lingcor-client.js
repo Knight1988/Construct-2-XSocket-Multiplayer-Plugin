@@ -8,9 +8,8 @@ var LingCorClient = (function (_super) {
     function LingCorClient() {
         _super.apply(this, arguments);
     }
-    LingCorClient.prototype.connect = function (url, name, controllerName) {
-        if (controllerName === void 0) { controllerName = "lingcor"; }
-        _super.prototype.connect.call(this, url, name, controllerName);
+    LingCorClient.prototype.connect = function (url, name) {
+        _super.prototype.connect.call(this, url, name);
         var self = this;
         var $self = $(this);
         self.controller.on("updateobjectinfo", function (data) {

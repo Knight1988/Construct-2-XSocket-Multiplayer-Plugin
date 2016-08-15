@@ -33,7 +33,7 @@ namespace GameServer.Model
         [JsonProperty("players")]
         public List<Player> Players { get; } = new List<Player>();
 
-        public List<RoomController> PlayerControllers { get; } = new List<RoomController>();
+        public List<LingCorController> PlayerControllers { get; } = new List<LingCorController>();
 
         public Room(string gameName, string roomName, int maxPlayers, string password)
         {
@@ -43,14 +43,14 @@ namespace GameServer.Model
             Password = password;
         }
 
-        public void AddPlayer(RoomController controller)
+        public void AddPlayer(LingCorController controller)
         {
             Players.Add(controller.Me);
             PlayerControllers.Add(controller);
             PlayerJoined = controller.Me;
         }
 
-        public void RemovePlayer(RoomController controller)
+        public void RemovePlayer(LingCorController controller)
         {
             Players.Remove(controller.Me);
             PlayerControllers.Remove(controller);

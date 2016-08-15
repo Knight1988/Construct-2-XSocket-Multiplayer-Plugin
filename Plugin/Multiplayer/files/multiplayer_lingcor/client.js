@@ -1,14 +1,14 @@
 var Client = (function () {
     function Client() {
+        this.me = new Player();
     }
-    Client.prototype.connect = function (url, name, controllerName) {
-        if (controllerName === void 0) { controllerName = "player"; }
+    Client.prototype.connect = function (url, name) {
         var self = this;
         var $self = $(this);
         // ReSharper disable once InconsistentNaming
         self.connection = new xsockets.client(self.connectionUrl = url);
         self.connection.setParameters({ name: name });
-        self.controller = self.connection.controller(controllerName);
+        self.controller = self.connection.controller("lingcor");
         self.connection.onOpen = function (e) {
             $self.trigger("onOpen", e);
         };

@@ -15,6 +15,8 @@ namespace GameServer.Model
         public double Y { get; set; }
         [JsonProperty("layer")]
         public string Layer { get; set; }
+        [JsonProperty("animation")]
+        public string Animation { get; set; }
         [JsonProperty("visible")]
         public bool Visible { get; set; }
         [JsonProperty("tick")]

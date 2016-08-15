@@ -10,7 +10,7 @@
 		"category":		"Web",						// Prefer to re-use existing categories, but you can set anything here
 		"type":			"object",					// either "world" (appears in layout and is drawn), else "object"
 		"rotatable":	true,						// only used when "type" is "world".  Enables an angle property on the object.
-		"dependency": "xsockets.latest.js;client.js;room-client.js;game-client.js;lingcor-client.js",
+		"dependency": "xsockets.latest.js;entities.js;client.js;room-client.js;game-client.js;lingcor-client.js",
 		"flags":		0							// uncomment lines to enable flags...
 						| pf_singleglobal			// exists project-wide, e.g. mouse, keyboard.  "type" must be "object".
 					//	| pf_texture				// object has a single texture (e.g. tiled background)
@@ -80,6 +80,9 @@ AddCondition(7, cf_trigger, "On player left room", "Room", "On player left room"
 // on host changed
 AddCondition(8, cf_trigger, "On room's host is changed", "Room", "On room's host is changed", "Trigger when a player become new host.", "OnHostChanged");
 
+// on object created
+AddCondition(9, cf_trigger, "On object created", "Game", "On object created", "Trigger when an object created by this plugin.", "OnObjectCreated");
+
 ////////////////////////////////////////
 // Actions
 
@@ -117,16 +120,21 @@ AddStringParam("Tag", "A tag to identify this kind of message.");
 AddAnyTypeParam("Message", "The message data to send.");
 AddAction(4, af_none, "Broadcast message", "Room", "Broadcast tag <i>{0}</i> message <b>{1}</b>", "Send a message every player in the room.", "BroadcastMessage");
 
-// Sync objects
+// Update object info
 AddObjectParam("Object", "Object to update.")
 AddAction(5, af_none, "Update object info", "Game", "Update object {0}", "Update object to other player.", "UpdateObjectInfo");
 
+// Promote host
 AddNumberParam("Player Id", "Id of player to promote.")
 AddAction(6, af_none, "Promote a player into host", "Game", "Promote player {0}", "Promote a player into host.", "PromoteHost");
 
-// Sync objects
+// Destroy object
 AddObjectParam("Object", "Object to destroy.")
 AddAction(7, af_none, "Destroy object", "Game", "Destroy object {0}", "Destroy object in both host and player.", "DestroyObject");
+
+// Sync object
+AddObjectParam("Object", "Object to sync.")
+AddAction(8, af_none, "Sync object", "Game", "Sync object {0}", "Sync object to other player.", "SyncObject");
 
 ////////////////////////////////////////
 // Expressions
@@ -168,7 +176,7 @@ ACESDone();
 // new cr.Property(ept_link,		name,	link_text,		description, "firstonly")		// has no associated value; simply calls "OnPropertyChanged" on click
 
 var property_list = [
-	new cr.Property(ept_integer, 	"My property",		77,		"An example property.")
+	//new cr.Property(ept_integer, 	"My property",		77,		"An example property.")
 	];
 	
 // Called by IDE when a new object type is to be created

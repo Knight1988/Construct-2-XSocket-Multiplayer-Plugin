@@ -8,32 +8,19 @@ var GameClient = (function (_super) {
     function GameClient() {
         _super.apply(this, arguments);
     }
-    GameClient.prototype.connect = function (url, name, controllerName) {
-        if (controllerName === void 0) { controllerName = "game"; }
-        _super.prototype.connect.call(this, url, name, controllerName);
+    GameClient.prototype.connect = function (url, name) {
+        _super.prototype.connect.call(this, url, name);
         var self = this;
         var $self = $(this);
-        self.controller.on("updateobjectinfo", function (data) {
-            $self.trigger("onUpdateObjectInfo", JSON.stringify(data));
-        });
-        self.controller.on("destroyObjects", function (data) {
-            $self.trigger("onDestroyObjects", JSON.stringify(data));
+        self.controller.on("playermessage", function (data) {
+            $self.trigger("onPlayerMessage", JSON.stringify(data));
         });
     };
-    GameClient.prototype.updateObjectInfo = function (objs) {
-        this.controller.invoke("updateobjectinfo", objs);
+    GameClient.prototype.sendMessage = function (tag, value) {
+        this.controller.invoke("playermessage", { tag: tag, value: value });
     };
-    GameClient.prototype.destroyObjects = function (objs) {
-        this.controller.invoke("destroyObjects", objs);
-    };
-    GameClient.prototype.onUpdateObjectInfo = function (action) {
-        $(this).on("onUpdateObjectInfo", function (e, data) {
-            if (typeof (action) == "function")
-                action(JSON.parse(data));
-        });
-    };
-    GameClient.prototype.onDestroyObjects = function (action) {
-        $(this).on("onDestroyObjects", function (e, data) {
+    GameClient.prototype.onPlayerMessage = function (action) {
+        $(this).on("onPlayerMessage", function (e, data) {
             if (typeof (action) == "function")
                 action(JSON.parse(data));
         });

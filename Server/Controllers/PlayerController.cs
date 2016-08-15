@@ -9,7 +9,7 @@ namespace GameServer.Controllers
     /// <summary>
     /// Implement/Override your custom actionmethods, events etc in this real-time MVC controller
     /// </summary>
-    public class PlayerController : XSocketController
+    public partial class LingCorController
     {
         protected static readonly string Version = Assembly.GetAssembly(typeof(XSocketController)).GetName().Version.ToString();
         protected static long IdCounter = 1;

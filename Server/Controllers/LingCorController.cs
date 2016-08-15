@@ -1,12 +1,13 @@
 using System.Threading.Tasks;
 using GameServer.Model;
+using XSockets.Core.XSocket;
 
 namespace GameServer.Controllers
 {
     /// <summary>
     /// Implement/Override your custom actionmethods, events etc in this real-time MVC controller
     /// </summary>
-    public class LingCorController : RoomController
+    public partial class LingCorController : XSocketController
     {
         public async Task UpdateObjectInfo(ObjectInfo[] objs)
         {

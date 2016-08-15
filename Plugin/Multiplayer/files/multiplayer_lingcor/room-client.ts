@@ -6,8 +6,8 @@ class RoomClient extends Client {
         return this.room == undefined || this.room.hostId === this.me.id;
     }
 
-    connect(url: string, name: string, controllerName: string = "room") {
-        super.connect(url, name, controllerName);
+    connect(url: string, name: string) {
+        super.connect(url, name);
         const self = this;
         const $self = $(this);
         self.controller.on("playerjoinedroom", (data) => {

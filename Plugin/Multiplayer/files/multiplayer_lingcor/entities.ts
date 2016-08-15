@@ -25,6 +25,7 @@ class ObjectInfo {
     y: number;
     visible: boolean;
     layer: string;
+    animation: string;
     tick: number;
 }
 

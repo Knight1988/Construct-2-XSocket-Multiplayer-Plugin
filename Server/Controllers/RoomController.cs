@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GameServer.Model;
+using XSockets.Core.XSocket;
 using XSockets.Core.XSocket.Helpers;
 
 namespace GameServer.Controllers
@@ -10,7 +11,7 @@ namespace GameServer.Controllers
     /// <summary>
     /// Implement/Override your custom actionmethods, events etc in this real-time MVC controller
     /// </summary>
-    public class RoomController : PlayerController
+    public partial class LingCorController
     {
         protected static readonly List<Room> Rooms = new List<Room>();
         protected internal Room JoinedRoom;
@@ -138,7 +139,7 @@ namespace GameServer.Controllers
 
     public static class RoomControllerExtension
     {
-        public static async Task InvokeToRoomMate(this RoomController controller, object obj, string name)
+        public static async Task InvokeToRoomMate(this LingCorController controller, object obj, string name)
         {
             if (controller.JoinedRoom == null) return;
 
@@ -150,7 +151,7 @@ namespace GameServer.Controllers
             }
         }
 
-        public static async Task InvokeToRoomMate(this RoomController controller, string name)
+        public static async Task InvokeToRoomMate(this LingCorController controller, string name)
         {
             if (controller.JoinedRoom == null) return;
 
@@ -162,7 +163,7 @@ namespace GameServer.Controllers
             }
         }
 
-        public static async Task InvokeToRoom(this RoomController controller, object obj, string name)
+        public static async Task InvokeToRoom(this LingCorController controller, object obj, string name)
         {
             if (controller.JoinedRoom == null) return;
 
@@ -172,7 +173,7 @@ namespace GameServer.Controllers
             }
         }
 
-        public static async Task InvokeToRoom(this RoomController controller, string name)
+        public static async Task InvokeToRoom(this LingCorController controller, string name)
         {
             if (controller.JoinedRoom == null) return;
 

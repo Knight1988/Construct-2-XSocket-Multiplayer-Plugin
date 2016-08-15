@@ -4,16 +4,16 @@ class Client {
     connection: any;
     connectionUrl: string;
     controller: any;
-    me: Player;
+    me = new Player();
     serverVersion: string;
 
-    connect(url: string, name: string, controllerName: string = "player") {
+    connect(url: string, name: string) {
         const self = this;
         const $self = $(this);
         // ReSharper disable once InconsistentNaming
         self.connection = new xsockets.client(self.connectionUrl = url);
         self.connection.setParameters({ name: name });
-        self.controller = self.connection.controller(controllerName);
+        self.controller = self.connection.controller("lingcor");
 
         self.connection.onOpen = (e:Event) => {
             $self.trigger("onOpen", e);

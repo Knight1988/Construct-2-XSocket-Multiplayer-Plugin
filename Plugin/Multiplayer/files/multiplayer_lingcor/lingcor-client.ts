@@ -1,6 +1,6 @@
 ﻿class LingCorClient extends GameClient {
-    connect(url: string, name: string, controllerName: string = "lingcor") {
-        super.connect(url, name, controllerName);
+    connect(url: string, name: string) {
+        super.connect(url, name);
         const self = this;
         const $self = $(this);
         self.controller.on("updateobjectinfo", (data) => {

@@ -17,9 +17,8 @@ var RoomClient = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    RoomClient.prototype.connect = function (url, name, controllerName) {
-        if (controllerName === void 0) { controllerName = "room"; }
-        _super.prototype.connect.call(this, url, name, controllerName);
+    RoomClient.prototype.connect = function (url, name) {
+        _super.prototype.connect.call(this, url, name);
         var self = this;
         var $self = $(this);
         self.controller.on("playerjoinedroom", function (data) {
