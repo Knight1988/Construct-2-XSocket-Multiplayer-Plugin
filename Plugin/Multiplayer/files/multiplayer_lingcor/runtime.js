@@ -439,7 +439,7 @@ cr.plugins_.lingcor_multiplayer = function (runtime)
 	            layer: inst.layer.name,
 	            visible: inst.visible,
 	        }
-	        if (inst.cur_animation !== undefined) obj.animation = inst.cur_animation;
+	        if (inst.cur_animation !== undefined) obj.animation = inst.cur_animation.name;
 	        objs.push(obj);
 	    }
 	    this.client.updateObjectInfo(objs);

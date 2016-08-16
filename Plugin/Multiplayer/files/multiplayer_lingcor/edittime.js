@@ -3,7 +3,7 @@
 	return {
 		"name":			"LingCor Multiplayer",	// as appears in 'insert object' dialog, can be changed as long as "id" stays the same
 		"id":			"lingcor_multiplayer",	// this is used to identify this plugin and is saved to the project; never change it
-		"version":		"1.0.2",						// (float in x.y format) Plugin version - C2 shows compatibility warnings based on this
+		"version":		"1.0.3",						// (float in x.y format) Plugin version - C2 shows compatibility warnings based on this
 		"description":	"Create real-time multiplayer online games using XSocket Javascript V6.",
 		"author":		"Squall Leonhart",
 		"help url":		"http://lingcor.net",
@@ -134,7 +134,7 @@ AddAction(7, af_none, "Destroy object", "Game", "Destroy object {0}", "Destroy o
 
 // Sync object
 AddObjectParam("Object", "Object to sync.")
-AddAction(8, af_none, "Sync object", "Game", "Sync object {0}", "Sync object to other player.", "SyncObject");
+AddAction(8, cf_deprecated, "Sync object", "Game", "Sync object {0}", "Sync object to other player.", "SyncObject");
 
 ////////////////////////////////////////
 // Expressions
