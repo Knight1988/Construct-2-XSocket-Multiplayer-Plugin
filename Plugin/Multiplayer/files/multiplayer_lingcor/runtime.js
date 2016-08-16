@@ -82,9 +82,13 @@ cr.plugins_.lingcor_multiplayer = function (runtime)
             self.destroyObjects(objs);
         });
 
-        this.runtime.addDestroyCallback(function(inst) {
-            self.onObjectDestroyed.call(self, inst);
+        client.onPlayerMessage(function() {
+            self.runtime.trigger(cr.plugins_.lingcor_multiplayer.prototype.cnds.OnPlayerMessage, self);
         });
+
+        //this.runtime.addDestroyCallback(function(inst) {
+        //    self.onObjectDestroyed.call(self, inst);
+        //});
 	    this.runtime.tickMe(this);
 	};
 	
@@ -199,7 +203,7 @@ cr.plugins_.lingcor_multiplayer = function (runtime)
 	            this.addWayPointTimeTravel(inst, obj.x, obj.y, 10);
 	        }
 	        Object.getPrototypeOf(type.plugin).acts.SetVisible.call(inst, obj.visible);
-	        Object.getPrototypeOf(type.plugin).acts.SetAnim.call(inst, obj.animation, "beginning");
+	        if (obj.animation !== undefined) Object.getPrototypeOf(type.plugin).acts.SetAnim.call(inst, obj.animation, "beginning");
 	    }
 	}
 
@@ -321,7 +325,7 @@ cr.plugins_.lingcor_multiplayer = function (runtime)
             name: inst.type.name,
         }
     
-        this.client.destroyObjects([obj]);
+        //this.client.destroyObjects([obj]);
     }
 
 	//////////////////////////////////////
@@ -356,7 +360,7 @@ cr.plugins_.lingcor_multiplayer = function (runtime)
 
     // on player message
 	Cnds.prototype.OnPlayerMessage = function (tag) {
-	    return this.tag == tag;
+	    return this.client.message.tag == tag;
 	};
 
     // on Promote host
@@ -434,8 +438,8 @@ cr.plugins_.lingcor_multiplayer = function (runtime)
 	            name: inst.type.name,
 	            layer: inst.layer.name,
 	            visible: inst.visible,
-                animation: inst.cur_animation.name,
 	        }
+	        if (inst.cur_animation !== undefined) obj.animation = inst.cur_animation;
 	        objs.push(obj);
 	    }
 	    this.client.updateObjectInfo(objs);
@@ -444,9 +448,10 @@ cr.plugins_.lingcor_multiplayer = function (runtime)
     // Destroy object
 	Acts.prototype.DestroyObject = function (type) {
 	    var objs = [];
-	    for (var i = 0; i < type.instances.length; i++) {
+	    var instances = type.getCurrentSol().instances;
+	    for (var i = 0; i < instances.length; i++) {
             // get instance
-	        var inst = type.instances[i];
+	        var inst = instances[i];
             // skip if no syncId
 	        if (inst.syncId == undefined) continue;
 
@@ -514,7 +519,7 @@ cr.plugins_.lingcor_multiplayer = function (runtime)
     // The current room joined.
 	Exps.prototype.Message = function (ret)	// 'ret' must always be the first parameter - always return the expression's result through it!
 	{
-	    ret.set_any(this.message);	// return our value
+	    ret.set_any(this.client.message.value);	// return our value
 	};
 
     // The left player id

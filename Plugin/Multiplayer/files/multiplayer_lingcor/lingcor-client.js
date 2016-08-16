@@ -18,12 +18,19 @@ var LingCorClient = (function (_super) {
         self.controller.on("destroyObjects", function (data) {
             $self.trigger("onDestroyObjects", JSON.stringify(data));
         });
+        self.controller.on("playermessage", function (data) {
+            self.message = data;
+            $self.trigger("onPlayerMessage", JSON.stringify(data));
+        });
     };
     LingCorClient.prototype.updateObjectInfo = function (objs) {
         this.controller.invoke("updateobjectinfo", objs);
     };
     LingCorClient.prototype.destroyObjects = function (objs) {
         this.controller.invoke("destroyObjects", objs);
+    };
+    LingCorClient.prototype.broadcastMessage = function (tag, value) {
+        this.controller.invoke("playermessage", { tag: tag, value: value });
     };
     LingCorClient.prototype.onUpdateObjectInfo = function (action) {
         $(this).on("onUpdateObjectInfo", function (e, data) {
@@ -33,6 +40,12 @@ var LingCorClient = (function (_super) {
     };
     LingCorClient.prototype.onDestroyObjects = function (action) {
         $(this).on("onDestroyObjects", function (e, data) {
+            if (typeof (action) == "function")
+                action(JSON.parse(data));
+        });
+    };
+    LingCorClient.prototype.onPlayerMessage = function (action) {
+        $(this).on("onPlayerMessage", function (e, data) {
             if (typeof (action) == "function")
                 action(JSON.parse(data));
         });
