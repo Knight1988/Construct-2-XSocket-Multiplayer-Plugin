@@ -15,6 +15,9 @@ var LingCorClient = (function (_super) {
         self.controller.on("updateobjectinfo", function (data) {
             $self.trigger("onUpdateObjectInfo", JSON.stringify(data));
         });
+        self.controller.on("updateobjectvariable", function (data) {
+            $self.trigger("onUpdateObjectVariable", JSON.stringify(data));
+        });
         self.controller.on("destroyObjects", function (data) {
             $self.trigger("onDestroyObjects", JSON.stringify(data));
         });
@@ -26,6 +29,9 @@ var LingCorClient = (function (_super) {
     LingCorClient.prototype.updateObjectInfo = function (objs) {
         this.controller.invoke("updateobjectinfo", objs);
     };
+    LingCorClient.prototype.updateObjectVariable = function (objs) {
+        this.controller.invoke("updateobjectvariable", objs);
+    };
     LingCorClient.prototype.destroyObjects = function (objs) {
         this.controller.invoke("destroyObjects", objs);
     };
@@ -34,6 +40,12 @@ var LingCorClient = (function (_super) {
     };
     LingCorClient.prototype.onUpdateObjectInfo = function (action) {
         $(this).on("onUpdateObjectInfo", function (e, data) {
+            if (typeof (action) == "function")
+                action(JSON.parse(data));
+        });
+    };
+    LingCorClient.prototype.onUpdateObjectVariable = function (action) {
+        $(this).on("onUpdateObjectVariable", function (e, data) {
             if (typeof (action) == "function")
                 action(JSON.parse(data));
         });

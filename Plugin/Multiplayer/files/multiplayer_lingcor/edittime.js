@@ -136,6 +136,11 @@ AddAction(7, af_none, "Destroy object", "Game", "Destroy object {0}", "Destroy o
 AddObjectParam("Object", "Object to sync.")
 AddAction(8, cf_deprecated, "Sync object", "Game", "Sync object {0}", "Sync object to other player.", "SyncObject");
 
+// Update object variable
+AddObjectParam("Object", "An object type already being synced. The chosen instance variable will also be synced.");
+AddObjectInstanceVarParam("Instance variable", "Choose the instance variable in the above object to sync.");
+AddAction(9, af_none, "Update instance variable", "Game", "Update {0} variable <b>{1}</b>", "Update a synced object's instance variable over the network.", "UpdateObjectInstanceVar");
+
 ////////////////////////////////////////
 // Expressions
 

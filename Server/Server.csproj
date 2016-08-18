@@ -121,6 +121,7 @@
     <Compile Include="Model\JoinRoomResult.cs" />
     <Compile Include="Model\LingCorTopic.cs" />
     <Compile Include="Model\ObjectInfo.cs" />
+    <Compile Include="Model\ObjectVariable.cs" />
     <Compile Include="Model\PeerMessage.cs" />
     <Compile Include="Model\Player.cs" />
     <Compile Include="Model\Position.cs" />

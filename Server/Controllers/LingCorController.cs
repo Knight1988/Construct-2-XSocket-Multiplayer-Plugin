@@ -13,6 +13,10 @@ namespace GameServer.Controllers
         {
             await this.InvokeToRoomMate(objs, LingCorTopic.UpdateObjectInfo);
         }
+        public async Task UpdateObjectVariable(ObjectVariable[] objs)
+        {
+            await this.InvokeToRoomMate(objs, LingCorTopic.UpdateObjectVariable);
+        }
 
         public async Task DestroyObjects(ObjectInfo[] objs)
         {
