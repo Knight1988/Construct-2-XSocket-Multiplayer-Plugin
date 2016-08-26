@@ -127,6 +127,7 @@
     <Compile Include="Model\Position.cs" />
     <Compile Include="Model\Room.cs" />
     <Compile Include="Model\Topic.cs" />
+    <Compile Include="MyConfig.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XSocketsNET\DefaultLogger.cs" />
