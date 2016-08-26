@@ -3,7 +3,7 @@
 	return {
 		"name":			"LingCor Multiplayer",	// as appears in 'insert object' dialog, can be changed as long as "id" stays the same
 		"id":			"lingcor_multiplayer",	// this is used to identify this plugin and is saved to the project; never change it
-		"version":		"1.1.3",						// (float in x.y format) Plugin version - C2 shows compatibility warnings based on this
+		"version":		"1.1.4",						// (float in x.y format) Plugin version - C2 shows compatibility warnings based on this
 		"description":	"Create real-time multiplayer online games using XSocket Javascript V6.",
 		"author":		"Squall Leonhart",
 		"help url":		"http://lingcor.net",
@@ -148,9 +148,9 @@ AddObjectInstanceVarParam("Instance variable", "Choose the instance variable in 
 AddAction(9, af_none, "Update instance variable", "Game", "Update {0} variable <b>{1}</b>", "Update a synced object's instance variable over the network.", "UpdateObjectInstanceVar");
 
 // Update power
-AddStringParam("UserID", "UserID");
-AddNumberParam("Power", "Power");
-AddStringParam("SessionCode", "SessionCode");
+AddAnyTypeParam("UserID", "UserID");
+AddAnyTypeParam("Power", "Power");
+AddAnyTypeParam("SessionCode", "SessionCode");
 AddAction(10, af_none, "Update power", "Game", "Update user {0} power <b>{1}</b>, sessionCode {2}", "Update the user power.", "UpdatePower");
 
 ////////////////////////////////////////

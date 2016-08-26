@@ -1,3 +1,5 @@
+using System;
+using System.Configuration;
 using XSockets.Core.Configuration;
 
 namespace GameServer
@@ -7,6 +9,11 @@ namespace GameServer
     /// </summary>
     public class MyConfig : ConfigurationSetting
     {
+        private static int Port
+        {
+            get { return Convert.ToInt32(ConfigurationManager.AppSettings["Port"]); }
+        }
+
         /// <summary>
         /// Sample configuration where mydomain.com:4502 is the public Uri that clients connect to.
         /// Then our firewall will do a port forward to the machine 192.168.1.4 and port 4503
@@ -25,6 +32,6 @@ namespace GameServer
         /// Sample where we setup the server to run on localhost port 4506.
         /// We can of course replace the IP with host name for example mydomain.com:4506
         /// </summary>
-        public MyConfig() : base("ws://127.0.0.1:4550") { }
+        public MyConfig() : base(string.Format("ws://127.0.0.1:{0}",Port)) { }
     }
 }
