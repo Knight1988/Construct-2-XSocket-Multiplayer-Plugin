@@ -3,7 +3,7 @@
 	return {
 		"name":			"LingCor Multiplayer",	// as appears in 'insert object' dialog, can be changed as long as "id" stays the same
 		"id":			"lingcor_multiplayer",	// this is used to identify this plugin and is saved to the project; never change it
-		"version":		"1.0.3",						// (float in x.y format) Plugin version - C2 shows compatibility warnings based on this
+		"version":		"1.1.3",						// (float in x.y format) Plugin version - C2 shows compatibility warnings based on this
 		"description":	"Create real-time multiplayer online games using XSocket Javascript V6.",
 		"author":		"Squall Leonhart",
 		"help url":		"http://lingcor.net",
@@ -83,6 +83,12 @@ AddCondition(8, cf_trigger, "On room's host is changed", "Room", "On room's host
 // on object created
 AddCondition(9, cf_trigger, "On object created", "Game", "On object created", "Trigger when an object created by this plugin.", "OnObjectCreated");
 
+// update power
+AddCondition(10, cf_trigger, "On power updated", "Game", "On power updated", "Trigger after successful send power update to server.", "OnPowerUpdated");
+
+// failed to call updat power service
+AddCondition(11, cf_trigger, "On update power failed", "Game", "On update power failed", "Trigger when failed to call service.", "OnPowerUpdateFailed");
+
 ////////////////////////////////////////
 // Actions
 
@@ -141,6 +147,12 @@ AddObjectParam("Object", "An object type already being synced. The chosen instan
 AddObjectInstanceVarParam("Instance variable", "Choose the instance variable in the above object to sync.");
 AddAction(9, af_none, "Update instance variable", "Game", "Update {0} variable <b>{1}</b>", "Update a synced object's instance variable over the network.", "UpdateObjectInstanceVar");
 
+// Update power
+AddStringParam("UserID", "UserID");
+AddNumberParam("Power", "Power");
+AddStringParam("SessionCode", "SessionCode");
+AddAction(10, af_none, "Update power", "Game", "Update user {0} power <b>{1}</b>, sessionCode {2}", "Update the user power.", "UpdatePower");
+
 ////////////////////////////////////////
 // Expressions
 
@@ -165,6 +177,7 @@ AddExpression(9, ef_return_number, "", "Room", "LeftPlayerId", "The id of player
 AddExpression(10, ef_return_string, "", "Room", "LeftPlayerName", "The name of player who left room.");
 AddExpression(11, ef_return_number, "", "Room", "JoinedPlayerId", "The id of player who joined room.");
 AddExpression(12, ef_return_string, "", "Room", "JoinedPlayerName", "The name of player who joined room.");
+AddExpression(13, ef_return_string, "", "Game", "PowerUpdateResult", "The result after call update power service.");
 
 
 ////////////////////////////////////////

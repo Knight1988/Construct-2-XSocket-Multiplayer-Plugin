@@ -48,30 +48,34 @@ cr.plugins_.lingcor_multiplayer = function (runtime)
 		this.wayPoints = {};
 	    this.instList = {};
 	    this.histories = {};
+	    this.cnds = cr.plugins_.lingcor_multiplayer.prototype.cnds;
+        this.trigger = function(cnd) {
+            self.runtime.trigger(cnd, self);
+        }
 		var client = self.client = new LingCorClient();
 
 		client.onConnected(function (player) {
-		    self.runtime.trigger(cr.plugins_.lingcor_multiplayer.prototype.cnds.OnConnected, self);
+		    self.trigger(self.cnds.OnConnected);
 		});
 
 		client.onJoinedRoom(function () {
-	        self.runtime.trigger(cr.plugins_.lingcor_multiplayer.prototype.cnds.OnJoinedRoom, self);
+		    self.trigger(self.cnds.OnJoinedRoom);
 	    });
 
 	    client.onLeftRoom(function() {
-	        self.runtime.trigger(cr.plugins_.lingcor_multiplayer.prototype.cnds.OnLeftRoom, self);
+	        self.trigger(self.cnds.OnLeftRoom);
 	    });
 
 	    client.onPlayerJoinedRoom(function() {
-	        self.runtime.trigger(cr.plugins_.lingcor_multiplayer.prototype.cnds.OnPlayerJoinedRoom, self);
+	        self.trigger(self.cnds.OnPlayerJoinedRoom);
 	    });
 
 	    client.onPlayerLeftRoom(function() {
-	        self.runtime.trigger(cr.plugins_.lingcor_multiplayer.prototype.cnds.OnPlayerLeftRoom, self);
+	        self.trigger(self.cnds.OnPlayerLeftRoom);
 	    });
 
 	    client.onHostChanged(function () {
-	        self.runtime.trigger(cr.plugins_.lingcor_multiplayer.prototype.cnds.OnHostChanged, self);
+	        self.trigger(self.cnds.OnHostChanged);
 	    });
 
 	    client.onUpdateObjectInfo(function (objs) {
@@ -87,7 +91,7 @@ cr.plugins_.lingcor_multiplayer = function (runtime)
         });
 
         client.onPlayerMessage(function() {
-            self.runtime.trigger(cr.plugins_.lingcor_multiplayer.prototype.cnds.OnPlayerMessage, self);
+            self.trigger(self.cnds.OnPlayerMessage);
         });
 
         //this.runtime.addDestroyCallback(function(inst) {
@@ -202,8 +206,8 @@ cr.plugins_.lingcor_multiplayer = function (runtime)
 	            this.runtime.trigger(cr.plugins_.lingcor_multiplayer.prototype.cnds.OnObjectCreated, inst);
 	            inst.syncId = obj.syncId;
 	        } else {
-
 	            Object.getPrototypeOf(type.plugin).acts.MoveToLayer.call(inst, layer);
+	            //Object.getPrototypeOf(type.plugin).acts.SetPos.call(inst, obj.x, obj.y);
 	            this.addWayPointTimeTravel(inst, obj.x, obj.y, 30);
 	        }
 	        Object.getPrototypeOf(type.plugin).acts.SetVisible.call(inst, obj.visible);
@@ -398,6 +402,16 @@ cr.plugins_.lingcor_multiplayer = function (runtime)
 	Cnds.prototype.OnObjectCreated = function () {
 	    return true;
 	};
+
+    // on power updated
+	Cnds.prototype.OnPowerUpdated = function () {
+	    return true;
+	};
+
+    // on power update failed
+	Cnds.prototype.OnPowerUpdateFailed = function () {
+	    return true;
+	};
 	
 	pluginProto.cnds = new Cnds();
 	
@@ -509,6 +523,38 @@ cr.plugins_.lingcor_multiplayer = function (runtime)
         this.client.updateObjectVariable(objs);
     }
 
+    Acts.prototype.UpdatePower = function (userId, power, sessionCode) {
+        var self = this;
+        // setting up date
+        var data = {
+            userID: userId,
+            power: power,
+            sessionCode: sessionCode
+        }
+
+        // call webservice
+        $.ajax({
+            type: "POST",
+            url: "http://lingcor.net/DesktopModules/ElearningEnglish/Services/LearningEnglishServices.asmx/UpdatePowerGame",
+            cache: false,
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(data),
+            dataType: "json",
+            success: function (data) {
+                // store the service result
+                self.powerUpdateResult = data.d.toString();
+                // trigger power updated
+                self.trigger(self.cnds.OnPowerUpdated);
+            },
+            error: function (e) {
+                // store the status text
+                self.powerUpdateResult = e.statusText;
+                // trigger power update failed
+                self.trigger(self.cnds.OnPowerUpdateFailed);
+            }
+        });
+    }
+
     pluginProto.acts = new Acts();
 	
 	//////////////////////////////////////
@@ -591,6 +637,12 @@ cr.plugins_.lingcor_multiplayer = function (runtime)
 	Exps.prototype.JoinedPlayerName = function (ret)	// 'ret' must always be the first parameter - always return the expression's result through it!
 	{
 	    ret.set_string(this.client.room.playerJoined.name);	// return our value
+	};
+
+    // The result after call update power service
+	Exps.prototype.PowerUpdateResult = function (ret)	// 'ret' must always be the first parameter - always return the expression's result through it!
+	{
+	    ret.set_string(this.powerUpdateResult);	// return our value
 	};
 
 	pluginProto.exps = new Exps();
